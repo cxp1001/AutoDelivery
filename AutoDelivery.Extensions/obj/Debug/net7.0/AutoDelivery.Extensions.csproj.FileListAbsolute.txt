@@ -1,0 +1,17 @@
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\bin\Debug\net7.0\AutoDelivery.Extensions.deps.json
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\bin\Debug\net7.0\AutoDelivery.Extensions.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\bin\Debug\net7.0\AutoDelivery.Extensions.pdb
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\bin\Debug\net7.0\AutoDelivery.Core.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\bin\Debug\net7.0\AutoDelivery.Domain.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\bin\Debug\net7.0\AutoDelivery.Core.pdb
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\bin\Debug\net7.0\AutoDelivery.Domain.pdb
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\obj\Debug\net7.0\AutoDelivery.Extensions.csproj.AssemblyReference.cache
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\obj\Debug\net7.0\AutoDelivery.Extensions.GeneratedMSBuildEditorConfig.editorconfig
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\obj\Debug\net7.0\AutoDelivery.Extensions.AssemblyInfoInputs.cache
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\obj\Debug\net7.0\AutoDelivery.Extensions.AssemblyInfo.cs
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\obj\Debug\net7.0\AutoDelivery.Extensions.csproj.CoreCompileInputs.cache
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\obj\Debug\net7.0\AutoDelivery.Extensions.csproj.CopyComplete
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\obj\Debug\net7.0\AutoDelivery.Extensions.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\obj\Debug\net7.0\refint\AutoDelivery.Extensions.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\obj\Debug\net7.0\AutoDelivery.Extensions.pdb
+D:\zzzzz\AutoDelivery\AutoDelivery.Extensions\obj\Debug\net7.0\ref\AutoDelivery.Extensions.dll
