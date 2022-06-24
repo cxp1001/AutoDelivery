@@ -1,15 +1,17 @@
+using System.Security.Cryptography.X509Certificates;
 using AutoDelivery.Core;
 using AutoDelivery.Domain;
 using AutoDelivery.Service.ProductApp;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ShopifyWebApi.Web.Extensions;
 
 namespace AutoDelivery.Api.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class ProductController : ControllerBase
+    //[Authorize]
+    public class ProductController : BaseController
     {
         private readonly IProductService _productService;
 
@@ -18,8 +20,6 @@ namespace AutoDelivery.Api.Controllers
             this._productService = productService;
 
         }
-
-       
 
 
         /// <summary>
@@ -35,8 +35,9 @@ namespace AutoDelivery.Api.Controllers
         /// <param name="orderType"></param>
         /// <returns></returns>
         [HttpGet("GetProducts")]
-        public async Task<IEnumerable<Product>> GetProductsAsync(string? productCategory,
-            string productName,
+
+        public async Task<string> GetProductsAsync(string? productCategory,
+            string? productName,
             string? productSku,
             string? maker,
              int pageIndex = 1,
@@ -44,25 +45,71 @@ namespace AutoDelivery.Api.Controllers
             string sort = "ProductName",
             OrderType orderType = OrderType.Asc)
         {
-            return await _productService.GetProductDtoAsync(productCategory, productName, productSku, maker,
-            new PageWithSortDto
+
+            // 获取用户的Id
+            // var userId = HttpContext.GetCurrentUserId();
+            var userId = 5;
+
+            var productsDto = await _productService.GetProductDtoAsync(userId,
+                productCategory, productName, productSku, maker,
+                new PageWithSortDto
+                {
+                    PageIndex = pageIndex,
+                    PageSize = pageSize,
+                    Sort = sort,
+                    OrderType = orderType
+                });
+
+            var productCount = productsDto.Count();
+            Result result = new();
+
+            if (productCount != 0)
             {
-                PageIndex = pageIndex,
-                PageSize = pageSize,
-                Sort = sort,
-                OrderType = orderType
-            });
+                HttpContext.Response.StatusCode = 200;
+                result.Data = new
+                {
+                    Products = productsDto.ToList()
+                };
+                result.Time = DateTimeOffset.Now;
+                result.Status = 0;
+                result.ErrorMessage = "Ok";
+                result.ResultCount = productCount;
+
+            }
+            else
+            {
+                HttpContext.Response.StatusCode = 400;
+                result.Data = null;
+                result.Time = DateTimeOffset.Now;
+                result.Status = 1;
+                result.ErrorMessage = "Products is null (No product results found matching your query)";
+
+            }
+
+            return JsonConvert.SerializeObject(result);
+
         }
 
 
-        // 获取所有分类
-        [HttpGet("GetCategories")]
-        public async Task<IEnumerable<string>> GetCategoriesAsync()
-        {
-            return await _productService.GetProductCategoriesAsync();
-        }
-
-
+        /// <summary>
+        /// 用户添加产品
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="maker"></param>
+        /// <param name="mainName"></param>
+        /// <param name="subName"></param>
+        /// <param name="edition"></param>
+        /// <param name="version"></param>
+        /// <param name="commonName"></param>
+        /// <param name="sku"></param>
+        /// <param name="detail"></param>
+        /// <param name="category"></param>
+        /// <param name="hasActiveKey"></param>
+        /// <param name="hasSubActiveKey"></param>
+        /// <param name="hasActiveLink"></param>
+        /// <param name="hasSerialNum"></param>
+        /// <param name="isAvailable"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> AddProductAsync(string name,
             string maker,
@@ -80,30 +127,152 @@ namespace AutoDelivery.Api.Controllers
             bool? hasSerialNum,
             bool isAvailable = false)
         {
-            var res = await _productService.AddProductAsync(name, maker, mainName, subName, edition, version, commonName, sku, detail, category, hasActiveKey, hasSubActiveKey, hasActiveLink, hasSerialNum, isAvailable);
-            if (res != null)
+            // 获取用户的Id
+            // var userId = HttpContext.GetCurrentUserId();
+            var userId = 4;
+
+            var insertedProduct = await _productService.AddProductAsync(userId, name, maker, mainName, subName, edition, version, commonName, sku, detail, category, hasActiveKey, hasSubActiveKey, hasActiveLink, hasSerialNum, isAvailable);
+
+            if (insertedProduct != null)
             {
-                return Ok("add product successful");
+                var goodResString = JsonConvert.SerializeObject(new Result
+                {
+                    Status = 3,
+                    ErrorMessage = $"Product {insertedProduct.ProductName} added successfully",
+                    Time = DateTimeOffset.Now
+                });
+
+                return Ok(goodResString);
             }
             else
             {
-                return BadRequest("error");
+                var badResString = JsonConvert.SerializeObject(new Result
+                {
+                    Status = 4,
+                    ErrorMessage = $"Failed to add product {name}",
+                    Time = DateTimeOffset.Now
+                });
+                return BadRequest(badResString);
             }
         }
+
+
+        /// <summary>
+        /// 更新产品信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="maker"></param>
+        /// <param name="mainName"></param>
+        /// <param name="subName"></param>
+        /// <param name="edition"></param>
+        /// <param name="version"></param>
+        /// <param name="commonName"></param>
+        /// <param name="sku"></param>
+        /// <param name="detail"></param>
+        /// <param name="category"></param>
+        /// <param name="categoryId"></param>
+        /// <param name="hasActiveKey"></param>
+        /// <param name="hasSubActiveKey"></param>
+        /// <param name="hasActiveLink"></param>
+        /// <param name="hasSerialNum"></param>
+        /// <param name="IsAvailable"></param>
+        /// <returns></returns>
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProductAsync(int id, string? name)
+        public async Task<IActionResult> UpdateProductAsync(
+            int id,
+            string? name,
+            string? maker,
+            string? mainName,
+            string? subName,
+            string? edition,
+            string? version,
+            string? commonName,
+            string? sku,
+            string? detail,
+            string? category,
+            int? categoryId,
+            bool? hasActiveKey,
+            bool? hasSubActiveKey,
+            bool? hasActiveLink,
+            bool? hasSerialNum,
+            bool IsAvailable)
         {
-            var res = await _productService.EditProductAsync(id, name);
-            if (res != null)
+            // 获取用户的Id
+            // var userId = HttpContext.GetCurrentUserId();
+            var userId = 4;
+
+            var updatedProduct = await _productService.EditProductAsync(userId, id, name, maker, mainName, subName, edition, version, commonName, sku, detail, category, categoryId,
+            hasActiveKey, hasSubActiveKey, hasActiveLink, hasSerialNum, IsAvailable);
+            if (updatedProduct != null)
             {
-                return Ok();
+                var goodResString = JsonConvert.SerializeObject(new Result
+                {
+                    Status = 6,
+                    ErrorMessage = $"Product {updatedProduct.ProductName}'s information updated successfully",
+                    Time = DateTimeOffset.Now
+                });
+
+                return Ok(goodResString);
+
             }
             else
             {
-                return BadRequest();
+                var badResString = JsonConvert.SerializeObject(new Result
+                {
+                    Status = 7,
+                    ErrorMessage = $"The update of the product {updatedProduct.ProductName}'s information was unsuccessful",
+                    Time = DateTimeOffset.Now
+                });
+
+                return Ok(badResString);
             }
         }
 
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteProductAsync(int id)
+        {
+
+            // 获取用户的Id
+            // var userId = HttpContext.GetCurrentUserId();
+            var userId = 4;
+
+            var deletedProduct = await _productService.DeleteProductAsync(userId, id);
+
+            if (deletedProduct != null)
+            {
+                var goodResString = JsonConvert.SerializeObject(new Result
+                {
+                    Status = 9,
+                    ErrorMessage = $"Product {deletedProduct.ProductName}'s information deleted successfully",
+                    Time = DateTimeOffset.Now
+                });
+
+                return Ok(goodResString);
+
+            }
+            else
+            {
+                var badResString = JsonConvert.SerializeObject(new Result
+                {
+                    Status = 10,
+                    ErrorMessage = $"The delete of the product was unsuccessful",
+                    Time = DateTimeOffset.Now
+                });
+
+                return Ok(badResString);
+            }
+
+
+        }
+
+
+
+
     }
+
+   
+
 }

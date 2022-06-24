@@ -13,8 +13,8 @@ namespace AutoDelivery.Domain
         public string? Maker { get; set; } = null!;
         public string? MainName { get; set; } = null!;
         public string? SubName { get; set; }
-        public DateTime CreatedTime { get; set; }
-        public DateTime? EditTime { get; set; } 
+        public DateTimeOffset CreatedTime { get; set; }
+        public DateTimeOffset? EditTime { get; set; } 
         public string? ProductEdition { get; set; } = null!;
         public string? ProductVersion { get; set; } = null!;
         public string? ProductCommonName { get; set; } = null!;
