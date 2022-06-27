@@ -25,8 +25,12 @@ namespace AutoDelivery.Service.SerialApp
             this._dbContext = dbContext;
         }
 
-
-        public async Task<List<SerialsInfoList>> GetAllSerialsOfCurrentUserAsync(int userId)
+        /// <summary>
+        /// 拉取当前用户的所有产品-序列号信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<IQueryable<SerialsInfoList>> GetAllSerialsOfCurrentUserAsync(int userId)
         {
             // 获取当前用户
             var currentUser = await _userRepo.GetQueryable().AsNoTracking().Include(u => u.Products).SingleOrDefaultAsync(u => u.Id == userId);
@@ -45,18 +49,17 @@ namespace AutoDelivery.Service.SerialApp
                 );
             }
 
-
-
             var productIdsOfCurrentUser = currentUser.Products.Where(p => p != null).Select(p => p.Id);
 
-            var serialsOfAllProducts = await _productRepo.GetQueryable().AsNoTracking().Include(p => p.SerialsInventory).Where(p => productIdsOfCurrentUser.Contains(p.Id) && p != null).Select(p => new SerialsInfoList { ProductName = p.ProductName, SerialInfo = p.SerialsInventory }).ToListAsync();
+            var serialsOfAllProducts = _productRepo.GetQueryable().AsNoTracking().Include(p => p.SerialsInventory).Where(p => productIdsOfCurrentUser.Contains(p.Id) && p != null).Select(p => new SerialsInfoList { ProductName = p.ProductName, SerialInfo = p.SerialsInventory });
             return serialsOfAllProducts;
 
         }
 
         /// <summary>
-        /// 序列号模糊查询
+        /// 序列号模糊查找
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="name"></param>
         /// <param name="serialNum"></param>
         /// <param name="activeKey"></param>
@@ -66,6 +69,7 @@ namespace AutoDelivery.Service.SerialApp
         /// <param name="pageWithSortDto"></param>
         /// <returns></returns>
         public async Task<IEnumerable<Serial>> GetSerialDtoAsync(
+            int userId,
             string name,
             string? serialNum,
             string? activeKey,
@@ -74,13 +78,16 @@ namespace AutoDelivery.Service.SerialApp
             bool used,
             PageWithSortDto pageWithSortDto)
         {
+
             // 排序字符
             pageWithSortDto.Sort ??= "ProductName";
             // 分页跳过的页数
             int skip = (pageWithSortDto.PageIndex - 1) * pageWithSortDto.PageSize;
 
+            var serialsOfCurrentUser = GetAllSerialsOfCurrentUserAsync(userId).Result.AsNoTracking().SelectMany(s => s.SerialInfo);
+
             // 查询
-            var serials = _serialRepo.GetQueryable().Where(
+            var serials = serialsOfCurrentUser.Where(
                 m => m.ProductName.ToLower().Contains(name.ToLower()) &&
 
                  (!string.IsNullOrWhiteSpace(m.SerialNumber) && (!string.IsNullOrWhiteSpace(serialNum)) && (m.SerialNumber.ToLower().Contains(serialNum.ToLower()))
@@ -96,7 +103,7 @@ namespace AutoDelivery.Service.SerialApp
                  || string.IsNullOrWhiteSpace(activeLink)) &&
 
                 (m.Used == used)
-                ).OrderBy(pageWithSortDto.Sort).Skip(skip).Take(pageWithSortDto.PageSize).AsNoTracking();
+                ).OrderBy(pageWithSortDto.Sort).Skip(skip).Take(pageWithSortDto.PageSize);
 
 
 
@@ -105,8 +112,9 @@ namespace AutoDelivery.Service.SerialApp
 
 
         /// <summary>
-        /// 添加序列号
+        ///  用户在下拉列表中选择已有的产品并为其添加序列号
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="name"></param>
         /// <param name="sku"></param>
         /// <param name="serialNum"></param>
@@ -114,27 +122,60 @@ namespace AutoDelivery.Service.SerialApp
         /// <param name="subActiveKey"></param>
         /// <param name="activeLink"></param>
         /// <returns></returns>
-        public async Task<Serial> AddSerialAsync(string name,
-            string sku,
+        public async Task<Serial> AddSerialAsync(int userId, int productId,
             string? serialNum,
             string? activeKey,
             string? subActiveKey,
-            string? activeLink)
+            string? activeLink,
+            bool used = false)
         {
+            var currentUser = await _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
 
+            // 确定用户是否存在
+            if (currentUser == null)
+            {
+                throw new NullReferenceException(
+                    JsonConvert.SerializeObject(new
+                    {
+                        Status = 2,
+                        ErrorMessage = "user is null",
+                        Time = DateTimeOffset.Now
+                    }
+                    )
+                );
+            }
+
+            // 要添加序列号的产品是否存在
+            var currentProduct = currentUser.Products.SingleOrDefault(p => p.Id == productId);
+            if (currentProduct == null)
+            {
+                throw new NullReferenceException(
+                   JsonConvert.SerializeObject(new
+                   {
+                       Status = 8,
+                       ErrorMessage = "target product is not exist.",
+                       Time = DateTimeOffset.Now
+                   }));
+            }
+
+            // 生成新的序列号实体
             Serial newSerial = new()
             {
-                ProductName = name,
-                ProductSku = sku,
+                ProductName = currentProduct.ProductName,
+                ProductSku = currentProduct.ProductSku,
                 SerialNumber = serialNum,
                 ActiveKey = activeKey,
                 SubActiveKey = subActiveKey,
                 ActiveLink = activeLink,
+                Used = used,
                 CreatedTime = DateTime.Now
             };
 
 
-            return await _serialRepo.InsertAsync(newSerial);
+            // 将序列号实体添加到数据库中
+            var insertedSerial = await _serialRepo.InsertAsync(newSerial);
+            return insertedSerial;
+
         }
 
 
@@ -148,14 +189,44 @@ namespace AutoDelivery.Service.SerialApp
         /// <param name="activeLink"></param>
         /// <param name="used"></param>
         /// <returns></returns>
-        public async Task<Serial> EditSerialAsync(int id,
+        public async Task<Serial> EditSerialAsync(int userId, 
+            int productId,
+            int serialId,
             string? serialNum,
             string? activeKey,
             string? subActiveKey,
             string? activeLink,
             bool? used = false)
         {
+
+            var currentUser = await _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
+
+            // 确定用户是否存在
+            if (currentUser == null)
+            {
+                throw new NullReferenceException(
+                    JsonConvert.SerializeObject(new
+                    {
+                        Status = 2,
+                        ErrorMessage = "user is null",
+                        Time = DateTimeOffset.Now
+                    }
+                    )
+                );
+            }
+
+            var targetProduct =  currentUser.Products.SingleOrDefault(p => p.Id == productId);
+            // to do 要更改的产品不存在
+            var serial = _productRepo.GetQueryable().AsNoTracking().Include(p => p.SerialsInventory).SingleOrDefault(p => p.Id == productId);
+
+        
+
+
+
+
+
             var serial = await _serialRepo.GetQueryable().FirstOrDefaultAsync(s => s.Id == id);
+            _productRepo
             if (serial != null)
             {
                 serial.SerialNumber = serialNum == null ? serial.SerialNumber : serialNum;
@@ -181,7 +252,7 @@ namespace AutoDelivery.Service.SerialApp
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteSerialAsync(int id)
+        public async Task<bool> DeleteSerialAsync(int userId, int id)
         {
             var targetSerial = await _serialRepo.GetQueryable().FirstOrDefaultAsync(s => s.Id == id);
 

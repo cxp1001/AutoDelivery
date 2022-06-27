@@ -19,7 +19,10 @@ namespace AutoDelivery.Api.Controllers
 
         }
 
-
+        /// <summary>
+        /// 获取当前用户的所有产品和对应的序列号
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("GetAllSerials")]
         public async Task<string> GetAllSerialsAsync()
         {
@@ -81,9 +84,22 @@ namespace AutoDelivery.Api.Controllers
         }
 
 
-
+        /// <summary>
+        /// 根据用户输入的信息模糊查找满足条件的序列号
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="serialNum"></param>
+        /// <param name="activeKey"></param>
+        /// <param name="subActiveKey"></param>
+        /// <param name="activeLink"></param>
+        /// <param name="used"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="sort"></param>
+        /// <param name="orderType"></param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IEnumerable<Serial>> GetSerialsAsync(string name,
+        public async Task<string> GetSerialsAsync(string name,
             string? serialNum,
             string? activeKey,
             string? subActiveKey,
@@ -95,7 +111,11 @@ namespace AutoDelivery.Api.Controllers
             OrderType orderType = OrderType.Asc
              )
         {
-            return await _serialService.GetSerialDtoAsync(name, serialNum, activeKey, subActiveKey, activeLink, used,
+
+            //int userId = HttpContext.GetCurrentUserId();
+            int userId = 4;
+
+            var serials = await _serialService.GetSerialDtoAsync(userId, name, serialNum, activeKey, subActiveKey, activeLink, used,
             new PageWithSortDto()
             {
                 PageIndex = pageIndex,
@@ -104,25 +124,98 @@ namespace AutoDelivery.Api.Controllers
                 OrderType = orderType
 
             });
+
+            string resString;
+            // 查询结果为空
+            if (!serials.Any())
+            {
+                resString = JsonConvert.SerializeObject(
+                   new Result()
+                   {
+                       ErrorMessage = "none serial info of all existed products",
+                       Status = 14,
+                       Time = DateTimeOffset.Now,
+                       Data = null,
+                       ResultCount = 0
+                   }
+                );
+            }
+            else
+            {
+                resString = JsonConvert.SerializeObject(
+                  new Result()
+                  {
+                      ErrorMessage = "search of serials successful",
+                      Status = 15,
+                      Time = DateTimeOffset.Now,
+                      Data = serials,
+                      ResultCount = serials.Count()
+                  }
+                );
+            }
+
+            return resString;
         }
 
 
-
+        /// <summary>
+        /// 添加序列号
+        /// </summary>
+        /// <param name="productId">通过用户在下拉列表中选择的产品来获取当前产品的Id</param>
+        /// <param name="serialNum"></param>
+        /// <param name="activeKey"></param>
+        /// <param name="subActiveKey"></param>
+        /// <param name="activeLink"></param>
+        /// <param name="used"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<Serial> AddNewSerialAsync(string name,
-            string sku,
+        public async Task<string> AddNewSerialAsync(int productId,
             string? serialNum,
             string? activeKey,
             string? subActiveKey,
-            string? activeLink
+            string? activeLink,
+            bool used = false
            )
         {
-            return await _serialService.AddSerialAsync(name, sku, serialNum, activeKey, subActiveKey, activeLink);
+            //int userId = HttpContext.GetCurrentUserId();
+            int userId = 4;
+
+            var serial = await _serialService.AddSerialAsync(userId, productId, serialNum, activeKey, subActiveKey, activeLink, used);
+            string resString;
+
+            if (serial == null)
+            {
+                resString = JsonConvert.SerializeObject(
+                   new Result()
+                   {
+                       ErrorMessage = $"add serial failed",
+                       Status = 16,
+                       Time = DateTimeOffset.Now,
+                       Data = null,
+                       ResultCount = 0
+                   }
+                );
+            }
+            else
+            {
+                resString = JsonConvert.SerializeObject(
+                  new Result()
+                  {
+                      ErrorMessage = "add serial successful",
+                      Status = 17,
+                      Time = DateTimeOffset.Now,
+                      Data = serial,
+                      ResultCount = 1
+                  }
+                );
+            }
+
+            return resString;
         }
 
 
         [HttpPut]
-        public async Task<IActionResult> UpdateSerialAsync(int id,
+        public async Task<IActionResult> UpdateSerialAsync(int serialId,
             string? serialNum,
             string? activeKey,
             string? subActiveKey,
@@ -130,7 +223,11 @@ namespace AutoDelivery.Api.Controllers
             bool? used = false
         )
         {
-            var res = await _serialService.EditSerialAsync(id, serialNum, activeKey, subActiveKey, activeLink, used);
+            //int userId = HttpContext.GetCurrentUserId();
+            int userId = 4;
+
+
+            var res = await _serialService.EditSerialAsync(userId, serialId, serialNum, activeKey, subActiveKey, activeLink, used);
             if (res != null)
             {
                 return Ok($"Serial of {res.ProductName} has been successfully changed!");
@@ -146,7 +243,10 @@ namespace AutoDelivery.Api.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteSerialAsync(int id)
         {
-            var res = await _serialService.DeleteSerialAsync(id);
+            //int userId = HttpContext.GetCurrentUserId();
+            int userId = 4;
+
+            var res = await _serialService.DeleteSerialAsync(userId, id);
             if (res)
             {
                 return Ok("serial has been deleted.");

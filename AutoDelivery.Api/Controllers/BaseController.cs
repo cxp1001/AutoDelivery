@@ -12,7 +12,7 @@ namespace AutoDelivery.Api.Controllers
             public string ErrorMessage { get; set; }
             public DateTimeOffset Time { get; set; }
             public Object Data { get; set; } = null;
-            public int ResultCount { get; set; }
+            public int ResultCount { get; set; } = 0;
 
         }
     }
