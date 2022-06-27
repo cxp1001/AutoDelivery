@@ -1,10 +1,12 @@
 using AutoDelivery.Core;
 using AutoDelivery.Domain;
+using AutoDelivery.Domain.Result;
 using AutoDelivery.Service.SerialApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ShopifyWebApi.Web.Extensions;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace AutoDelivery.Api.Controllers
 {
@@ -20,9 +22,10 @@ namespace AutoDelivery.Api.Controllers
         }
 
         /// <summary>
-        /// 获取当前用户的所有产品和对应的序列号
+        /// 获取当前用户的所有产品和对应的序列号集合
         /// </summary>
         /// <returns></returns>
+        [SwaggerOperation(Summary = "获取当前用户的所有产品和对应的序列号集合")]
         [HttpGet("GetAllSerials")]
         public async Task<string> GetAllSerialsAsync()
         {
@@ -99,6 +102,7 @@ namespace AutoDelivery.Api.Controllers
         /// <param name="orderType"></param>
         /// <returns></returns>
         [HttpGet]
+        [SwaggerOperation(Summary = "根据用户输入的信息模糊查找满足条件的序列号")]
         public async Task<string> GetSerialsAsync(string name,
             string? serialNum,
             string? activeKey,
@@ -169,6 +173,7 @@ namespace AutoDelivery.Api.Controllers
         /// <param name="used"></param>
         /// <returns></returns>
         [HttpPost]
+        [SwaggerOperation(Summary = "添加序列号")]
         public async Task<string> AddNewSerialAsync(int productId,
             string? serialNum,
             string? activeKey,
@@ -214,8 +219,21 @@ namespace AutoDelivery.Api.Controllers
         }
 
 
+        /// <summary>
+        /// 编辑序列号信息
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="serialId"></param>
+        /// <param name="serialNum"></param>
+        /// <param name="activeKey"></param>
+        /// <param name="subActiveKey"></param>
+        /// <param name="activeLink"></param>
+        /// <param name="used"></param>
+        /// <returns></returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateSerialAsync(int serialId,
+        [SwaggerOperation(Summary = "编辑用户选择的产品的序列号")]
+        public async Task<IActionResult> UpdateSerialAsync(int productId,
+            int serialId,
             string? serialNum,
             string? activeKey,
             string? subActiveKey,
@@ -227,33 +245,70 @@ namespace AutoDelivery.Api.Controllers
             int userId = 4;
 
 
-            var res = await _serialService.EditSerialAsync(userId, serialId, serialNum, activeKey, subActiveKey, activeLink, used);
-            if (res != null)
+
+            var updatedSerial = await _serialService.EditSerialAsync(userId, productId, serialId, serialNum, activeKey, subActiveKey, activeLink, used);
+            if (updatedSerial != null)
             {
-                return Ok($"Serial of {res.ProductName} has been successfully changed!");
+
+                var goodResString = JsonConvert.SerializeObject(new Result
+                {
+                    Status = 17,
+                    ErrorMessage = $"Serial of {updatedSerial.ProductName} updated successful",
+                    Time = DateTimeOffset.Now
+                });
+
+                return Ok(goodResString);
             }
             else
             {
-                return NotFound("serial not found.");
+                var badResString = JsonConvert.SerializeObject(new Result
+                {
+                    Status = 18,
+                    ErrorMessage = $"Serial of {updatedSerial.ProductName} updated failed",
+                    Time = DateTimeOffset.Now
+                });
+
+                return BadRequest(badResString);
             }
 
         }
 
-
+        /// <summary>
+        /// 删除序列号
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="serialId"></param>
+        /// <returns></returns>
         [HttpDelete]
-        public async Task<IActionResult> DeleteSerialAsync(int id)
+        [SwaggerOperation(Summary = "删除序列号")]
+        public async Task<IActionResult> DeleteSerialAsync(int productId,
+            int serialId)
         {
             //int userId = HttpContext.GetCurrentUserId();
             int userId = 4;
 
-            var res = await _serialService.DeleteSerialAsync(userId, id);
-            if (res)
+            var deletedSerial = await _serialService.DeleteSerialAsync(userId, productId, serialId);
+            if (deletedSerial != null)
             {
-                return Ok("serial has been deleted.");
+                var goodResString = JsonConvert.SerializeObject(new Result
+                {
+                    Status = 19,
+                    ErrorMessage = $"Serial of {deletedSerial.ProductName} deleted successful",
+                    Time = DateTimeOffset.Now
+                });
+
+                return Ok(goodResString);
             }
             else
             {
-                return NotFound("serial not existed.");
+                var badResString = JsonConvert.SerializeObject(new Result
+                {
+                    Status = 20,
+                    ErrorMessage = $"Failed to delete serial of {deletedSerial.ProductName}.",
+                    Time = DateTimeOffset.Now
+                });
+
+                return BadRequest(badResString);
             }
         }
     }

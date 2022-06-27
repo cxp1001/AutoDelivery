@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using ShopifyWebApi.Domain.User;
 using Newtonsoft.Json;
+using AutoDelivery.Domain.Result;
 
 namespace AutoDelivery.Service.SerialApp
 {
@@ -51,7 +52,7 @@ namespace AutoDelivery.Service.SerialApp
 
             var productIdsOfCurrentUser = currentUser.Products.Where(p => p != null).Select(p => p.Id);
 
-            var serialsOfAllProducts = _productRepo.GetQueryable().AsNoTracking().Include(p => p.SerialsInventory).Where(p => productIdsOfCurrentUser.Contains(p.Id) && p != null).Select(p => new SerialsInfoList { ProductName = p.ProductName, SerialInfo = p.SerialsInventory });
+            var serialsOfAllProducts = _productRepo.GetQueryable().AsNoTracking().Include(p => p.SerialsInventory).Where(p => productIdsOfCurrentUser.Contains(p.Id) && p != null).Select(p => new SerialsInfoList { ProductId = p.Id, ProductName = p.ProductName, SerialInfo = p.SerialsInventory });
             return serialsOfAllProducts;
 
         }
@@ -180,7 +181,7 @@ namespace AutoDelivery.Service.SerialApp
 
 
         /// <summary>
-        /// 编辑序列号
+        /// 编辑序列号 ,用户在下拉列表中选择产品并选择序列号进行编辑
         /// </summary>
         /// <param name="id"></param>
         /// <param name="serialNum"></param>
@@ -189,7 +190,7 @@ namespace AutoDelivery.Service.SerialApp
         /// <param name="activeLink"></param>
         /// <param name="used"></param>
         /// <returns></returns>
-        public async Task<Serial> EditSerialAsync(int userId, 
+        public async Task<Serial> EditSerialAsync(int userId,
             int productId,
             int serialId,
             string? serialNum,
@@ -199,34 +200,25 @@ namespace AutoDelivery.Service.SerialApp
             bool? used = false)
         {
 
-            var currentUser = await _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
+            // 获取当前用户的产品-序列号信息
+            var products = await GetAllSerialsOfCurrentUserAsync(userId);
 
-            // 确定用户是否存在
-            if (currentUser == null)
+            // 要更改的产品是否存在于当前用户的产品库中
+            if (!products.Select(p => p.ProductId).Contains(productId))
             {
+                var resultString = new Result()
+                {
+                    Time = DateTimeOffset.Now,
+                    Status = 8,
+                    ErrorMessage = "target product is not exist."
+                };
                 throw new NullReferenceException(
-                    JsonConvert.SerializeObject(new
-                    {
-                        Status = 2,
-                        ErrorMessage = "user is null",
-                        Time = DateTimeOffset.Now
-                    }
-                    )
-                );
+                   JsonConvert.SerializeObject(resultString
+                   )
+               );
             }
 
-            var targetProduct =  currentUser.Products.SingleOrDefault(p => p.Id == productId);
-            // to do 要更改的产品不存在
-            var serial = _productRepo.GetQueryable().AsNoTracking().Include(p => p.SerialsInventory).SingleOrDefault(p => p.Id == productId);
-
-        
-
-
-
-
-
-            var serial = await _serialRepo.GetQueryable().FirstOrDefaultAsync(s => s.Id == id);
-            _productRepo
+            var serial = await _serialRepo.GetQueryable().FirstOrDefaultAsync(s => s.Id == serialId);
             if (serial != null)
             {
                 serial.SerialNumber = serialNum == null ? serial.SerialNumber : serialNum;
@@ -252,19 +244,36 @@ namespace AutoDelivery.Service.SerialApp
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteSerialAsync(int userId, int id)
+        public async Task<Serial> DeleteSerialAsync(int userId, int productId, int serialId)
         {
-            var targetSerial = await _serialRepo.GetQueryable().FirstOrDefaultAsync(s => s.Id == id);
+            // 获取当前用户的产品-序列号信息
+            var products = await GetAllSerialsOfCurrentUserAsync(userId);
 
+            // 要更改的产品是否存在于当前用户的产品库中
+            if (!products.Select(p => p.ProductId).Contains(productId))
+            {
+                var resultString = new Result()
+                {
+                    Time = DateTimeOffset.Now,
+                    Status = 8,
+                    ErrorMessage = "target product is not exist."
+                };
+                throw new NullReferenceException(
+                   JsonConvert.SerializeObject(resultString
+                   )
+               );
+            }
+
+            var targetSerial = await _serialRepo.GetQueryable().FirstOrDefaultAsync(s => s.Id == serialId);
             if (targetSerial != null)
             {
-                await _serialRepo.DeleteAsync(targetSerial);
-                return true;
+                return await _serialRepo.DeleteAsync(targetSerial);
             }
             else
             {
-                return false;
+                return null;
             }
+
 
         }
     }

@@ -27,7 +27,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(
+    s => s.EnableAnnotations()
+);
 var config = builder.Services.BuildServiceProvider().GetService<IConfiguration>() as IConfiguration;
 var connStr = config.GetConnectionString("Default");
 builder.Services.AddDbContext<AutoDeliveryContext>(

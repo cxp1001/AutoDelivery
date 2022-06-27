@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "FKym3Jvz2IytKUAy9QpN6QTQpyvRPTBG5jjGhPuW8xeOULLoA4Si/LH/xYIuwriCqtFzwhT0wVUzDy0traqmTw==",
+  "dgSpecHash": "oxxrLDwZogiYwJlFlYRgZxtlDLtkSVwtGWHUQO9GVVaLikTQnixOMoKXAJnhuyM37K7+NThlN2q74ZZsZTUjuA==",
   "success": true,
   "projectFilePath": "D:\\zzzzz\\AutoDelivery\\AutoDelivery.Api\\AutoDelivery.Api.csproj",
   "expectedPackageFiles": [
@@ -64,8 +64,9 @@
     "C:\\Users\\udeii\\.nuget\\packages\\runtime.native.system\\4.0.0\\runtime.native.system.4.0.0.nupkg.sha512",
     "C:\\Users\\udeii\\.nuget\\packages\\shopifysharp\\5.15.0\\shopifysharp.5.15.0.nupkg.sha512",
     "C:\\Users\\udeii\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
-    "C:\\Users\\udeii\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
-    "C:\\Users\\udeii\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",
+    "C:\\Users\\udeii\\.nuget\\packages\\swashbuckle.aspnetcore.annotations\\6.3.1\\swashbuckle.aspnetcore.annotations.6.3.1.nupkg.sha512",
+    "C:\\Users\\udeii\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.3.1\\swashbuckle.aspnetcore.swagger.6.3.1.nupkg.sha512",
+    "C:\\Users\\udeii\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.3.1\\swashbuckle.aspnetcore.swaggergen.6.3.1.nupkg.sha512",
     "C:\\Users\\udeii\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.2.3\\swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512",
     "C:\\Users\\udeii\\.nuget\\packages\\system.appcontext\\4.1.0\\system.appcontext.4.1.0.nupkg.sha512",
     "C:\\Users\\udeii\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",

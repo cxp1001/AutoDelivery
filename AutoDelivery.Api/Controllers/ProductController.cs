@@ -1,12 +1,14 @@
 using System.Security.Cryptography.X509Certificates;
 using AutoDelivery.Core;
 using AutoDelivery.Domain;
+using AutoDelivery.Domain.Result;
 using AutoDelivery.Service.ProductApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ShopifyWebApi.Web.Extensions;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace AutoDelivery.Api.Controllers
 {
@@ -35,6 +37,7 @@ namespace AutoDelivery.Api.Controllers
         /// <param name="orderType"></param>
         /// <returns></returns>
         [HttpGet("GetProducts")]
+        [SwaggerOperation(Summary = "模糊搜索产品")]
 
         public async Task<string> GetProductsAsync(string? productCategory,
             string? productName,
@@ -110,6 +113,7 @@ namespace AutoDelivery.Api.Controllers
         /// <param name="hasSerialNum"></param>
         /// <param name="isAvailable"></param>
         /// <returns></returns>
+        [SwaggerOperation(Summary = "添加产品")]
         [HttpPost]
         public async Task<IActionResult> AddProductAsync(string name,
             string maker,
@@ -180,6 +184,7 @@ namespace AutoDelivery.Api.Controllers
         /// <returns></returns>
 
         [HttpPut]
+        [SwaggerOperation(Summary = "更改产品信息")]
         public async Task<IActionResult> UpdateProductAsync(
             int id,
             string? name,
@@ -232,6 +237,7 @@ namespace AutoDelivery.Api.Controllers
 
 
         [HttpDelete]
+        [SwaggerOperation(Summary = "删除产品")]
         public async Task<ActionResult> DeleteProductAsync(int id)
         {
 
@@ -273,6 +279,6 @@ namespace AutoDelivery.Api.Controllers
 
     }
 
-   
+
 
 }

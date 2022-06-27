@@ -22,24 +22,25 @@ namespace AutoDelivery.Service.UserApp
             this._dbContext = dbContext;
         }
 
-        public async Task<IEnumerable> GetAllProducts(int userId, PageWithSortDto pageWithSortDto)
+        public async Task<List<Product>> GetAllProductsAsync(int userId, PageWithSortDto pageWithSortDto)
         {
             pageWithSortDto.Sort ??= "ProductName";
             var skip = (pageWithSortDto.PageIndex - 1) * pageWithSortDto.PageSize;
 
-            var user = await _userRepo.GetQueryable().AsNoTracking().SingleAsync(u => u.Id == userId);
+            var user = await _userRepo.GetQueryable().AsNoTracking().Include(u => u.Products).SingleOrDefaultAsync(u => u.Id == userId);
 
             if (user != null)
             {
-                IEnumerable products;
+
+                List<Product> products;
                 if (pageWithSortDto.OrderType == OrderType.Asc)
                 {
-                    products = _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().FirstOrDefault(u => u.Id == userId).Products.Select(p => new { p.ProductName, p.Id }).OrderBy(p => p.ProductName).Skip(skip).Take(pageWithSortDto.PageSize);
+                    products = user.Products.OrderBy(p => p.ProductName).Skip(skip).Take(pageWithSortDto.PageSize).ToList();
 
                 }
                 else
                 {
-                    products = _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().FirstOrDefault(u => u.Id == userId).Products.Select(p => new { p.ProductName, p.Id }).OrderByDescending(p => p.ProductName).Skip(skip).Take(pageWithSortDto.PageSize);
+                    products = user.Products.OrderByDescending(p => p.ProductName).Skip(skip).Take(pageWithSortDto.PageSize).ToList();
 
                 }
 

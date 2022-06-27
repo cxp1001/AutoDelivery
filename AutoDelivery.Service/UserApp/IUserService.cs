@@ -6,7 +6,7 @@ namespace AutoDelivery.Service.UserApp
 {
     public interface IUserService:IocTag
     {
-         Task<IEnumerable> GetAllProducts(int userId, PageWithSortDto pageWithSortDto);
+         Task<List<Product>> GetAllProductsAsync(int userId, PageWithSortDto pageWithSortDto);
         Task<IEnumerable> GetProductCategoriesAsync(int userId, PageWithSortDto pageWithSortDto);
     }
 }

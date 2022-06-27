@@ -71,3 +71,4 @@ d:\zzzzz\AutoDelivery\AutoDelivery.Api\obj\Debug\net7.0\refint\AutoDelivery.Api.
 d:\zzzzz\AutoDelivery\AutoDelivery.Api\obj\Debug\net7.0\AutoDelivery.Api.pdb
 d:\zzzzz\AutoDelivery\AutoDelivery.Api\obj\Debug\net7.0\AutoDelivery.Api.genruntimeconfig.cache
 d:\zzzzz\AutoDelivery\AutoDelivery.Api\obj\Debug\net7.0\ref\AutoDelivery.Api.dll
+d:\zzzzz\AutoDelivery\AutoDelivery.Api\bin\Debug\net7.0\Swashbuckle.AspNetCore.Annotations.dll
