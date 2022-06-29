@@ -1,15 +1,15 @@
 namespace AutoDelivery.Domain.Result
 {
-    public class Result
+    public class ShopifyResult
     {
-        
             public int Status { get; set; }
             public string ErrorMessage { get; set; }
             public DateTimeOffset Time { get; set; }
-            public Object? Data { get; set; } = null;
-            public int ResultCount { get; set; } = 0;
-        public string parameter { get; set; } = null;
-
-
+            public string RedirectPath { get; set; }
+            public string Data { get; set; }
+            
+            
+          
+          
     }
 }

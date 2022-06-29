@@ -4,7 +4,7 @@ using AutoDelivery.Domain;
 using AutoDelivery.Domain.Mail;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using ShopifyWebApi.Domain.User;
+using AutoDelivery.Domain.User;
 
 namespace AutoDelivery.Core.Core
 {

@@ -1,4 +1,4 @@
-using ShopifyWebApi.Domain.User;
+using AutoDelivery.Domain.User;
 
 namespace AutoDelivery.Domain.Session
 {

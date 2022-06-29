@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ShopifySharp.Infrastructure;
 
-namespace ShopifyWebApi.Web.Extensions
+namespace AutoDelivery.Api.Extensions
 {
     public static class HttpRequestExtensions
     {

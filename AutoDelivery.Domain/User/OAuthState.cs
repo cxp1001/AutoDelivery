@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoDelivery.Domain;
 
-namespace ShopifyWebApi.Domain.User
+namespace AutoDelivery.Domain.User
 {
     public class OAuthState:BaseModel
     {

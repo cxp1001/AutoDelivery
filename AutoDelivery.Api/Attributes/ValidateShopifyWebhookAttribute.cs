@@ -2,7 +2,7 @@ using AutoDelivery.Domain.Secrets;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
 using ShopifySharp;
-using ShopifyWebApi.Web.Extensions;
+using AutoDelivery.Api.Extensions;
 using System.Text;
 
 namespace AutoDelivery.Api.Attributes

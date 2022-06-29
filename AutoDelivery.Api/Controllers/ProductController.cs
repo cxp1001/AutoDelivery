@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using ShopifyWebApi.Web.Extensions;
+using AutoDelivery.Api.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace AutoDelivery.Api.Controllers
@@ -50,7 +50,7 @@ namespace AutoDelivery.Api.Controllers
         {
 
             // 获取用户的Id
-            // var userId = HttpContext.GetCurrentUserId();
+            //var userId = HttpContext.GetCurrentUserId();
             var userId = 5;
 
             var productsDto = await _productService.GetProductDtoAsync(userId,
@@ -89,7 +89,7 @@ namespace AutoDelivery.Api.Controllers
 
             }
 
-            return JsonConvert.SerializeObject(result);
+            return JsonConvert.SerializeObject(result,setting);
 
         }
 
@@ -144,7 +144,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 3,
                     ErrorMessage = $"Product {insertedProduct.ProductName} added successfully",
                     Time = DateTimeOffset.Now
-                });
+                },setting);
 
                 return Ok(goodResString);
             }
@@ -155,7 +155,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 4,
                     ErrorMessage = $"Failed to add product {name}",
                     Time = DateTimeOffset.Now
-                });
+                },setting);
                 return BadRequest(badResString);
             }
         }
@@ -217,7 +217,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 6,
                     ErrorMessage = $"Product {updatedProduct.ProductName}'s information updated successfully",
                     Time = DateTimeOffset.Now
-                });
+                },setting);
 
                 return Ok(goodResString);
 
@@ -229,7 +229,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 7,
                     ErrorMessage = $"The update of the product {updatedProduct.ProductName}'s information was unsuccessful",
                     Time = DateTimeOffset.Now
-                });
+                },setting);
 
                 return Ok(badResString);
             }
@@ -254,7 +254,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 9,
                     ErrorMessage = $"Product {deletedProduct.ProductName}'s information deleted successfully",
                     Time = DateTimeOffset.Now
-                });
+                },setting);
 
                 return Ok(goodResString);
 
@@ -266,7 +266,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 10,
                     ErrorMessage = $"The delete of the product was unsuccessful",
                     Time = DateTimeOffset.Now
-                });
+                },setting);
 
                 return Ok(badResString);
             }

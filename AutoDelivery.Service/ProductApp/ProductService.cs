@@ -4,7 +4,7 @@ using AutoDelivery.Core.Repository;
 using AutoDelivery.Domain;
 using AutoDelivery.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
-using ShopifyWebApi.Domain.User;
+using AutoDelivery.Domain.User;
 using Newtonsoft.Json;
 using System.Security.Authentication;
 

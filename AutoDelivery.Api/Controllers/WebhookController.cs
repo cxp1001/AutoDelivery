@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ShopifySharp;
-using ShopifyWebApi.Web.Extensions;
+using AutoDelivery.Api.Extensions;
 
 namespace AutoDelivery.Api.Controllers
 {

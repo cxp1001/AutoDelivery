@@ -1881,11 +1881,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\zzzzz\\AutoDelivery\\AutoDelivery.Core\\AutoDelivery.Core.csproj",
+      "projectUniqueName": "D:\\zzzzz\\AutoDelivery\\AutoDelivery.Core\\AutoDelivery.Core.csproj",
       "projectName": "AutoDelivery.Core",
-      "projectPath": "d:\\zzzzz\\AutoDelivery\\AutoDelivery.Core\\AutoDelivery.Core.csproj",
+      "projectPath": "D:\\zzzzz\\AutoDelivery\\AutoDelivery.Core\\AutoDelivery.Core.csproj",
       "packagesPath": "C:\\Users\\udeii\\.nuget\\packages\\",
-      "outputPath": "d:\\zzzzz\\AutoDelivery\\AutoDelivery.Core\\obj\\",
+      "outputPath": "D:\\zzzzz\\AutoDelivery\\AutoDelivery.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",

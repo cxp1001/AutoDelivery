@@ -5,7 +5,7 @@ using AutoDelivery.Service.SerialApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using ShopifyWebApi.Web.Extensions;
+using AutoDelivery.Api.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace AutoDelivery.Api.Controllers
@@ -47,7 +47,7 @@ namespace AutoDelivery.Api.Controllers
                          Time = DateTimeOffset.Now,
                          Data = null,
                          ResultCount = 0
-                     }
+                     },setting
                  );
             }
             else
@@ -63,7 +63,7 @@ namespace AutoDelivery.Api.Controllers
                         Time = DateTimeOffset.Now,
                         Data = listofSerials,
                         ResultCount = listofSerials.Count()
-                    }
+                    },setting
                 );
                 }
 
@@ -78,13 +78,13 @@ namespace AutoDelivery.Api.Controllers
                             Time = DateTimeOffset.Now,
                             Data = listofSerials,
                             ResultCount = listofSerials.Count()
-                        }
+                        },setting
                     );
                 }
 
             }
             return resString;
-        }
+        } 
 
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace AutoDelivery.Api.Controllers
                        Time = DateTimeOffset.Now,
                        Data = null,
                        ResultCount = 0
-                   }
+                   },setting
                 );
             }
             else
@@ -154,7 +154,7 @@ namespace AutoDelivery.Api.Controllers
                       Time = DateTimeOffset.Now,
                       Data = serials,
                       ResultCount = serials.Count()
-                  }
+                  },setting
                 );
             }
 
@@ -198,7 +198,7 @@ namespace AutoDelivery.Api.Controllers
                        Time = DateTimeOffset.Now,
                        Data = null,
                        ResultCount = 0
-                   }
+                   },setting
                 );
             }
             else
@@ -211,7 +211,7 @@ namespace AutoDelivery.Api.Controllers
                       Time = DateTimeOffset.Now,
                       Data = serial,
                       ResultCount = 1
-                  }
+                  },setting
                 );
             }
 
@@ -255,7 +255,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 17,
                     ErrorMessage = $"Serial of {updatedSerial.ProductName} updated successful",
                     Time = DateTimeOffset.Now
-                });
+                },setting);
 
                 return Ok(goodResString);
             }
@@ -266,7 +266,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 18,
                     ErrorMessage = $"Serial of {updatedSerial.ProductName} updated failed",
                     Time = DateTimeOffset.Now
-                });
+                },setting);
 
                 return BadRequest(badResString);
             }
@@ -295,7 +295,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 19,
                     ErrorMessage = $"Serial of {deletedSerial.ProductName} deleted successful",
                     Time = DateTimeOffset.Now
-                });
+                },setting);
 
                 return Ok(goodResString);
             }
@@ -306,7 +306,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 20,
                     ErrorMessage = $"Failed to delete serial of {deletedSerial.ProductName}.",
                     Time = DateTimeOffset.Now
-                });
+                },setting);
 
                 return BadRequest(badResString);
             }

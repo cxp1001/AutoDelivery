@@ -2,9 +2,9 @@ using System.Security.Claims;
 using AutoDelivery.Domain.Session;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using ShopifyWebApi.Domain.User;
+using AutoDelivery.Domain.User;
 
-namespace ShopifyWebApi.Web.Extensions
+namespace AutoDelivery.Api.Extensions
 {
     public static class HttpContextExtensions
     {

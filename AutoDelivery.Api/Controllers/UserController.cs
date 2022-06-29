@@ -5,7 +5,7 @@ using AutoDelivery.Domain.Result;
 using AutoDelivery.Service.UserApp;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using ShopifyWebApi.Web.Extensions;
+using AutoDelivery.Api.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace AutoDelivery.Api.Controllers
@@ -31,7 +31,7 @@ namespace AutoDelivery.Api.Controllers
           OrderType orderType = OrderType.Asc)
         {
             //var userId = HttpContext.GetCurrentUserId();
-            var userId = 10;
+            var userId = 5;
             var res = await _userService.GetAllProductsAsync(userId, new PageWithSortDto
             {
                 PageIndex = pageIndex,
@@ -43,7 +43,7 @@ namespace AutoDelivery.Api.Controllers
             Result result = new();
             if (!res.Any())
             {
-                
+
                 result.Time = DateTimeOffset.Now;
                 result.Status = 11;
                 result.ErrorMessage = "none product";
@@ -57,7 +57,7 @@ namespace AutoDelivery.Api.Controllers
                 result.ResultCount = res.Count();
             }
 
-            return JsonConvert.SerializeObject(result);
+            return JsonConvert.SerializeObject(result,setting);
 
         }
 
@@ -69,7 +69,7 @@ namespace AutoDelivery.Api.Controllers
         /// <returns></returns>
         [SwaggerOperation(Summary = "拉取当前用户设置的所有产品分类")]
         [HttpGet("GetCategories")]
-        public async Task<IEnumerable> GetCategoriesAsync(int pageIndex = 1,
+        public async Task<string> GetCategoriesAsync(int pageIndex = 1,
           int pageSize = 20,
           string sort = "ProductName",
           OrderType orderType = OrderType.Asc)
@@ -78,13 +78,40 @@ namespace AutoDelivery.Api.Controllers
             var userId = 4;
 
 
-            return await _userService.GetProductCategoriesAsync(userId, new PageWithSortDto
+            var categoies = await _userService.GetProductCategoriesAsync(userId, new PageWithSortDto
             {
                 PageIndex = pageIndex,
                 PageSize = pageSize,
                 Sort = sort,
                 OrderType = orderType
             });
+
+            string resString;
+            if (categoies.Any())
+            {
+                resString = JsonConvert.SerializeObject(new Result()
+                {
+                    Data = categoies,
+                    Time = DateTimeOffset.Now,
+                    ErrorMessage = "pull categories successful",
+                    Status = 22,
+                    ResultCount = categoies.Count()
+                },setting);
+            }
+            else
+            {
+                resString = JsonConvert.SerializeObject(new Result()
+                {
+
+                    Time = DateTimeOffset.Now,
+                    ErrorMessage = "none category",
+                    Status = 23,
+                },setting);
+            }
+
+            HttpContext.Response.StatusCode = 200;
+            return resString;
+
         }
     }
 }

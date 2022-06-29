@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoDelivery.Domain;
 using AutoDelivery.Domain.Mail;
 
-namespace ShopifyWebApi.Domain.User
+namespace AutoDelivery.Domain.User
 {
     public class UserAccount : BaseModel
     {
