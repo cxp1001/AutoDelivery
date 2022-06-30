@@ -48,6 +48,7 @@ namespace AutoDelivery.Core.Core
             modelBuilder.Entity<Product>().HasMany(p=>p.SerialsInventory);
             modelBuilder.Entity<Product>().HasOne(p=>p.ProductCategory);
             modelBuilder.Entity<OrderDetail>().HasMany(o=>o.RelatedSerials);
+            modelBuilder.Entity<Serial>().Property(s => s.RowVersion).IsRowVersion();
 
         }
 

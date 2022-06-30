@@ -214,6 +214,12 @@ namespace AutoDelivery.Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<string>("SerialNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -235,7 +241,7 @@ namespace AutoDelivery.Core.Migrations
                     b.ToTable("Serials");
                 });
 
-            modelBuilder.Entity("ShopifyWebApi.Domain.User.OAuthState", b =>
+            modelBuilder.Entity("AutoDelivery.Domain.User.OAuthState", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -259,7 +265,7 @@ namespace AutoDelivery.Core.Migrations
                     b.ToTable("LoginStates");
                 });
 
-            modelBuilder.Entity("ShopifyWebApi.Domain.User.UserAccount", b =>
+            modelBuilder.Entity("AutoDelivery.Domain.User.UserAccount", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -296,7 +302,7 @@ namespace AutoDelivery.Core.Migrations
 
             modelBuilder.Entity("AutoDelivery.Domain.OrderDetail", b =>
                 {
-                    b.HasOne("ShopifyWebApi.Domain.User.UserAccount", null)
+                    b.HasOne("AutoDelivery.Domain.User.UserAccount", null)
                         .WithMany("OrderDetails")
                         .HasForeignKey("UserAccountId");
                 });
@@ -307,7 +313,7 @@ namespace AutoDelivery.Core.Migrations
                         .WithMany()
                         .HasForeignKey("ProductCategoryId");
 
-                    b.HasOne("ShopifyWebApi.Domain.User.UserAccount", null)
+                    b.HasOne("AutoDelivery.Domain.User.UserAccount", null)
                         .WithMany("Products")
                         .HasForeignKey("UserAccountId");
 
@@ -325,7 +331,7 @@ namespace AutoDelivery.Core.Migrations
                         .HasForeignKey("ProductId");
                 });
 
-            modelBuilder.Entity("ShopifyWebApi.Domain.User.UserAccount", b =>
+            modelBuilder.Entity("AutoDelivery.Domain.User.UserAccount", b =>
                 {
                     b.HasOne("AutoDelivery.Domain.Mail.MailConfig", "Mailconfiguration")
                         .WithMany()
@@ -344,7 +350,7 @@ namespace AutoDelivery.Core.Migrations
                     b.Navigation("SerialsInventory");
                 });
 
-            modelBuilder.Entity("ShopifyWebApi.Domain.User.UserAccount", b =>
+            modelBuilder.Entity("AutoDelivery.Domain.User.UserAccount", b =>
                 {
                     b.Navigation("OrderDetails");
 

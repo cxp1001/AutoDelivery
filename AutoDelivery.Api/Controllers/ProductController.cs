@@ -97,16 +97,16 @@ namespace AutoDelivery.Api.Controllers
         /// <summary>
         /// 用户添加产品
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="productName"></param>
         /// <param name="maker"></param>
         /// <param name="mainName"></param>
         /// <param name="subName"></param>
-        /// <param name="edition"></param>
-        /// <param name="version"></param>
-        /// <param name="commonName"></param>
-        /// <param name="sku"></param>
-        /// <param name="detail"></param>
-        /// <param name="category"></param>
+        /// <param name="productEdition"></param>
+        /// <param name="productVersion"></param>
+        /// <param name="productCommonName"></param>
+        /// <param name="productSku"></param>
+        /// <param name="productDetails"></param>
+        /// <param name="productCategory"></param>
         /// <param name="hasActiveKey"></param>
         /// <param name="hasSubActiveKey"></param>
         /// <param name="hasActiveLink"></param>
@@ -115,16 +115,17 @@ namespace AutoDelivery.Api.Controllers
         /// <returns></returns>
         [SwaggerOperation(Summary = "添加产品")]
         [HttpPost]
-        public async Task<IActionResult> AddProductAsync(string name,
+        
+        public async Task<IActionResult> AddProductAsync(string productName,
             string maker,
             string? mainName,
             string? subName,
-            string? edition,
-            string? version,
-            string? commonName,
-            string sku,
-            string? detail,
-            string? category,
+            string? productEdition,
+            string? productVersion,
+            string? productCommonName,
+            string productSku,
+            string? productDetails,
+            string? productCategory,
             bool? hasActiveKey,
             bool? hasSubActiveKey,
             bool? hasActiveLink,
@@ -135,7 +136,7 @@ namespace AutoDelivery.Api.Controllers
             // var userId = HttpContext.GetCurrentUserId();
             var userId = 4;
 
-            var insertedProduct = await _productService.AddProductAsync(userId, name, maker, mainName, subName, edition, version, commonName, sku, detail, category, hasActiveKey, hasSubActiveKey, hasActiveLink, hasSerialNum, isAvailable);
+            var insertedProduct = await _productService.AddProductAsync(userId, productName, maker, mainName, subName, productEdition, productVersion, productCommonName, productSku, productDetails, productCategory, hasActiveKey, hasSubActiveKey, hasActiveLink, hasSerialNum, isAvailable);
 
             if (insertedProduct != null)
             {
@@ -153,7 +154,7 @@ namespace AutoDelivery.Api.Controllers
                 var badResString = JsonConvert.SerializeObject(new Result
                 {
                     Status = 4,
-                    ErrorMessage = $"Failed to add product {name}",
+                    ErrorMessage = $"Failed to add product {productName}",
                     Time = DateTimeOffset.Now
                 },setting);
                 return BadRequest(badResString);
@@ -165,16 +166,16 @@ namespace AutoDelivery.Api.Controllers
         /// 更新产品信息
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="name"></param>
+        /// <param name="productName"></param>
         /// <param name="maker"></param>
         /// <param name="mainName"></param>
         /// <param name="subName"></param>
-        /// <param name="edition"></param>
-        /// <param name="version"></param>
-        /// <param name="commonName"></param>
-        /// <param name="sku"></param>
-        /// <param name="detail"></param>
-        /// <param name="category"></param>
+        /// <param name="productEdition"></param>
+        /// <param name="productVersion"></param>
+        /// <param name="productCommonName"></param>
+        /// <param name="productSku"></param>
+        /// <param name="productDetails"></param>
+        /// <param name="productCategory"></param>
         /// <param name="categoryId"></param>
         /// <param name="hasActiveKey"></param>
         /// <param name="hasSubActiveKey"></param>
@@ -187,16 +188,16 @@ namespace AutoDelivery.Api.Controllers
         [SwaggerOperation(Summary = "更改产品信息")]
         public async Task<IActionResult> UpdateProductAsync(
             int id,
-            string? name,
+            string? productName,
             string? maker,
             string? mainName,
             string? subName,
-            string? edition,
-            string? version,
-            string? commonName,
-            string? sku,
-            string? detail,
-            string? category,
+            string? productEdition,
+            string? productVersion,
+            string? productCommonName,
+            string? productSku,
+            string? productDetails,
+            string? productCategory,
             int? categoryId,
             bool? hasActiveKey,
             bool? hasSubActiveKey,
@@ -208,7 +209,7 @@ namespace AutoDelivery.Api.Controllers
             // var userId = HttpContext.GetCurrentUserId();
             var userId = 4;
 
-            var updatedProduct = await _productService.EditProductAsync(userId, id, name, maker, mainName, subName, edition, version, commonName, sku, detail, category, categoryId,
+            var updatedProduct = await _productService.EditProductAsync(userId, id, productName, maker, mainName, subName, productEdition, productVersion, productCommonName, productSku, productDetails, productCategory, categoryId,
             hasActiveKey, hasSubActiveKey, hasActiveLink, hasSerialNum, IsAvailable);
             if (updatedProduct != null)
             {

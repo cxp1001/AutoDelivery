@@ -85,14 +85,14 @@ namespace AutoDelivery.Service.ProductApp
         /// <summary>
         ///     用户添加产品
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="productName"></param>
         /// <param name="maker"></param>
         /// <param name="mainName"></param>
         /// <param name="subName"></param>
-        /// <param name="edition"></param>
-        /// <param name="version"></param>
-        /// <param name="commonName"></param>
-        /// <param name="sku"></param>
+        /// <param name="productEdition"></param>
+        /// <param name="productVersion"></param>
+        /// <param name="productCommonName"></param>
+        /// <param name="productSku"></param>
         /// <param name="detail"></param>
         /// <param name="category"></param>
         /// <param name="hasActiveKey"></param>
@@ -103,14 +103,14 @@ namespace AutoDelivery.Service.ProductApp
         /// <returns></returns>
         public async Task<Product> AddProductAsync(
             int userId,
-            string name,
+            string productName,
             string maker,
             string? mainName,
             string? subName,
-            string? edition,
-            string? version,
-            string? commonName,
-            string sku,
+            string? productEdition,
+            string? productVersion,
+            string? productCommonName,
+            string productSku,
             string? detail,
             string? category,
             bool? hasActiveKey,
@@ -132,14 +132,14 @@ namespace AutoDelivery.Service.ProductApp
             {
                 newProduct = new()
                 {
-                    ProductName = name,
+                    ProductName = productName,
                     Maker = maker,
                     MainName = mainName,
                     SubName = subName,
-                    ProductEdition = edition,
-                    ProductVersion = version,
-                    ProductCommonName = commonName,
-                    ProductSku = sku,
+                    ProductEdition = productEdition,
+                    ProductVersion = productVersion,
+                    ProductCommonName = productCommonName,
+                    ProductSku = productSku,
                     ProductDetails = detail,
                     IsAvailable = IsAvailable,
                     CreatedTime = DateTime.Now,
@@ -158,14 +158,14 @@ namespace AutoDelivery.Service.ProductApp
             {
                 newProduct = new()
                 {
-                    ProductName = name,
+                    ProductName = productName,
                     Maker = maker,
                     MainName = mainName,
                     SubName = subName,
-                    ProductEdition = edition,
-                    ProductVersion = version,
-                    ProductCommonName = commonName,
-                    ProductSku = sku,
+                    ProductEdition = productEdition,
+                    ProductVersion = productVersion,
+                    ProductCommonName = productCommonName,
+                    ProductSku = productSku,
                     ProductDetails = detail,
                     IsAvailable = IsAvailable,
                     CreatedTime = DateTime.Now,

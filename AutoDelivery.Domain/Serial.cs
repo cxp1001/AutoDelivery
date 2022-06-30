@@ -24,6 +24,10 @@ namespace AutoDelivery.Domain
         public DateTimeOffset? ShippedTime { get; set; }
         // 使い済み
         public bool Used { get; set; } = false;
+        public byte[] RowVersion { get; set; }
+        
+        
+
         // 関連注文
        // public OrderDetail RelatedOrder { get; set; } = null;
     }

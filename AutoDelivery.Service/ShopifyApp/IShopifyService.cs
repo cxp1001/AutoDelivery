@@ -8,10 +8,9 @@ namespace AutoDelivery.Service.ShopifyApp
 {
     public interface IShopifyService : IocTag
     {
-       Task<OAuthState> CheckTokenAsync(string state);
+        Task<bool> CheckShopAsync(Session session, string shop);
+        Task<OAuthState> CheckTokenAsync(string state);
         Task DeleteTokenAsync(OAuthState dbToken);
-        Task<int> HandShakeAsync(string shop, Session session, HttpContext httpContext);
         Task<UserAccount> UserUpdate(string shop, Shop shopData, string accessToken);
-
     }
 }

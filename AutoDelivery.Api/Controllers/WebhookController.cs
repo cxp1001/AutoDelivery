@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ShopifySharp;
 using AutoDelivery.Api.Extensions;
+using AutoDelivery.Core.Repository;
+using AutoDelivery.Domain.User;
+using AutoDelivery.Service.OrderApp;
 
 namespace AutoDelivery.Api.Controllers
 {
@@ -15,11 +18,11 @@ namespace AutoDelivery.Api.Controllers
     [Route("[controller]")]
     public class WebhookController : ControllerBase
     {
-        private readonly AutoDeliveryContext _dbContext;
+        private readonly IOrderService _orderService;
 
-        public WebhookController(AutoDeliveryContext dbContext)
+        public WebhookController(IOrderService orderService)
         {
-            this._dbContext = dbContext;
+            this._orderService = orderService;
 
         }
 
@@ -35,52 +38,23 @@ namespace AutoDelivery.Api.Controllers
             // 从HTTP的请求体中获取webhook数据
             var order = await Request.DeserializeBodyAsync<Order>();
 
-            // 将body中的信息拉取出来
-            var itemQuantities = order.LineItems.Where(l => l.Quantity != null).Select(l => l.Quantity).Sum();
-            long? orderId = order.Id;
-            var orderName = order.Name;
-            DateTimeOffset? createdTime = order.CreatedAt;
-            DateTimeOffset? updatedTime = order.UpdatedAt;
-            var userName = order.Customer.FirstName + " " + order.Customer.LastName;
-            var email = order.Customer.Email;
-            var orderDetails = order.LineItems.Select(l => (product: l.Title, quantity: l.Quantity)).ToList();
-            // var orderDetails = order.LineItems.Select(l => (product: l.Title, sku: l.SKU, quantity: l.Quantity)).ToLookup(o => o.product,o=>o.sku,o =>o.quantity).ToDictionary(l=>l.Key,l=>l.First());;
-            var orderDetailsJson = JsonConvert.SerializeObject(orderDetails);
+            // 将webhook中的订单信息保存到数据库中
+            var newOrderDetail = await _orderService.SaveOrdersFromWebhookAsync(order);
 
-            // 拉取用户
-            var user = await _dbContext.Users.SingleAsync(u => u.ShopifyShopDomain == shop);
-            var userAccountId = user.Id;
-
-            // 存储webhook对象
-            OrderDetail newOrder = new()
-            {
-                OrderId = orderId,
-                OrderName = orderName,
-                CreatedTime = createdTime,
-                UpdatedTime = updatedTime,
-                ItemQuantity = itemQuantities,
-                OrderDetails = orderDetailsJson,
-                CustomerName = userName,
-                CustomerMail = email,
-                //UserAccountId = userAccountId
-            };
-
-            _dbContext.Add<OrderDetail>(newOrder);
-            await _dbContext.SaveChangesAsync();
-
-
+            // 更新用户的订单信息
+            await _orderService.UpdateOrdersOfUser(shop, newOrderDetail);
 
             // 根据用户的订单信息从数据库中提取相应的序列号
 
             // 1. 获取订单中的产品信息
-            List<string> productNames = order.LineItems.Select(l => l.Title).ToList();
-
+            var orderDetails = order.LineItems.Select(l => (Product: l.Title, Quantity: l.Quantity)).ToList();
+           
             // 2. 根据产品信息从数据库中提取相对应的序列号等激活信息
-            List<Serial> serials = new();
-            //MailService.SendActiveEmail();
+          
+       
 
             // 拉取用户的邮箱配置
-            MailConfig mailConfig = user.Mailconfiguration;
+           // MailConfig mailConfig = user.Mailconfiguration;
 
             return Ok();
         }

@@ -90,7 +90,7 @@ namespace AutoDelivery.Api.Controllers
         /// <summary>
         /// 根据用户输入的信息模糊查找满足条件的序列号
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="productName"></param>
         /// <param name="serialNum"></param>
         /// <param name="activeKey"></param>
         /// <param name="subActiveKey"></param>
@@ -103,7 +103,7 @@ namespace AutoDelivery.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [SwaggerOperation(Summary = "根据用户输入的信息模糊查找满足条件的序列号")]
-        public async Task<string> GetSerialsAsync(string name,
+        public async Task<string> GetSerialsAsync(string productName,
             string? serialNum,
             string? activeKey,
             string? subActiveKey,
@@ -119,7 +119,7 @@ namespace AutoDelivery.Api.Controllers
             //int userId = HttpContext.GetCurrentUserId();
             int userId = 4;
 
-            var serials = await _serialService.GetSerialDtoAsync(userId, name, serialNum, activeKey, subActiveKey, activeLink, used,
+            var serials = await _serialService.GetSerialDtoAsync(userId, productName, serialNum, activeKey, subActiveKey, activeLink, used,
             new PageWithSortDto()
             {
                 PageIndex = pageIndex,

@@ -31,7 +31,7 @@ namespace AutoDelivery.Api.Controllers
           OrderType orderType = OrderType.Asc)
         {
             //var userId = HttpContext.GetCurrentUserId();
-            var userId = 5;
+            var userId = 4;
             var res = await _userService.GetAllProductsAsync(userId, new PageWithSortDto
             {
                 PageIndex = pageIndex,

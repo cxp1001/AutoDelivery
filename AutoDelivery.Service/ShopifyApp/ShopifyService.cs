@@ -31,44 +31,25 @@ namespace AutoDelivery.Service.ShopifyApp
             this._secrets = secrets;
         }
 
-
-        public async Task<int> HandShakeAsync(string shop, Session session, HttpContext httpContext)
+        // 确认用户输入的商店和他们已登录的商店一致
+        public async Task<bool> CheckShopAsync(Session session, string shop)
         {
-
-            if (string.IsNullOrWhiteSpace(shop))
+            var user = await _userRepo.GetQueryable().AsNoTracking().FirstAsync(u => u.Id == session.UserId);
+            // 用户已登录，且输入的商店和当前登录的商店一致，可以跳转到主界面
+            if (user.ShopifyShopDomain == shop)
             {
-                return 1;
-                //Problem("Request is missing shop querystring parameter.", statusCode: 422);
+                return true;
             }
-
-            // 检查当前用户是否已登录
-            if (httpContext.User.Identity.IsAuthenticated)
+            // 商店域名不匹配，用户可能拥有多个商店且正在尝试登录另一个商店。
+            // 注销用户的登录并清除cookie，将用户跳转到登录/安装页面
+            else
             {
-                // 确认用户输入的商店和他们已登录的商店一致
-                var user = await _userRepo.GetQueryable().AsNoTracking().FirstAsync(u => u.Id == session.UserId);
-
-                // 用户已登录，且输入的商店和当前登录的商店一致，可以跳转到主界面
-                if (user.ShopifyShopDomain == shop)
-                {
-                    return 2;
-                    //RedirectToPageResult("/dashboard/index");
-                }
-
-                //The domains do not match, so the user likely owns two or more Shopify shops and they're trying
-                // to log in to a separate one.
-                // Log them out and erase their auth cookie and send them to the login/install page
-                // 商店域名不匹配，用户可能拥有多个商店且正在尝试登录另一个商店。
-                // 注销用户的登录并清除cookie，将用户跳转到登录/安装页面
-                await httpContext.SignOutAsync();
+                return false;
             }
-
-            // 用户未安装应用，或未登录，或是登录到了另外的商店，将用户跳转到登录/安装页面
-            return 3;
-            //return RedirectToPage("/auth/login")
         }
 
 
-        // 查看token是否存在于数据库中
+        // 查看用于oAuth验证的一次性token是否存在于数据库中
         public async Task<OAuthState> CheckTokenAsync(string state)
         {
 
