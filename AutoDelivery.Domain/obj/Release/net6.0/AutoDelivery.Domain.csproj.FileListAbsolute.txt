@@ -1,0 +1,12 @@
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\bin\Release\net6.0\AutoDelivery.Domain.deps.json
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\bin\Release\net6.0\AutoDelivery.Domain.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\bin\Release\net6.0\AutoDelivery.Domain.pdb
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\obj\Release\net6.0\AutoDelivery.Domain.csproj.AssemblyReference.cache
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\obj\Release\net6.0\AutoDelivery.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\obj\Release\net6.0\AutoDelivery.Domain.AssemblyInfoInputs.cache
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\obj\Release\net6.0\AutoDelivery.Domain.AssemblyInfo.cs
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\obj\Release\net6.0\AutoDelivery.Domain.csproj.CoreCompileInputs.cache
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\obj\Release\net6.0\AutoDelivery.Domain.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\obj\Release\net6.0\refint\AutoDelivery.Domain.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\obj\Release\net6.0\AutoDelivery.Domain.pdb
+D:\zzzzz\AutoDelivery\AutoDelivery.Domain\obj\Release\net6.0\ref\AutoDelivery.Domain.dll

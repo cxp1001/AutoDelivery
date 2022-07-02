@@ -10,7 +10,7 @@ using System.Security.Authentication;
 
 namespace AutoDelivery.Service.ProductApp
 {
-    public partial class ProductService : IProductService
+    public  class ProductService : IProductService
     {
         private readonly IRepository<Product> _productRepo;
         private readonly IRepository<ProductCategory> _categoryRepo;

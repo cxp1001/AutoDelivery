@@ -1,0 +1,17 @@
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Release\net6.0\AutoDelivery.Core.deps.json
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Release\net6.0\AutoDelivery.Core.runtimeconfig.json
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Release\net6.0\AutoDelivery.Core.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Release\net6.0\AutoDelivery.Core.pdb
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Release\net6.0\AutoDelivery.Domain.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Release\net6.0\AutoDelivery.Domain.pdb
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Release\net6.0\AutoDelivery.Core.csproj.AssemblyReference.cache
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Release\net6.0\AutoDelivery.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Release\net6.0\AutoDelivery.Core.AssemblyInfoInputs.cache
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Release\net6.0\AutoDelivery.Core.AssemblyInfo.cs
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Release\net6.0\AutoDelivery.Core.csproj.CoreCompileInputs.cache
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Release\net6.0\AutoDelivery.Core.csproj.CopyComplete
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Release\net6.0\AutoDelivery.Core.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Release\net6.0\refint\AutoDelivery.Core.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Release\net6.0\AutoDelivery.Core.pdb
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Release\net6.0\AutoDelivery.Core.genruntimeconfig.cache
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Release\net6.0\ref\AutoDelivery.Core.dll

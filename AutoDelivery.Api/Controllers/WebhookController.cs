@@ -1,7 +1,7 @@
 using AutoDelivery.Core.Core;
 using AutoDelivery.Domain;
 using AutoDelivery.Domain.Mail;
-using AutoDelivery.Service.MailHelper;
+using AutoDelivery.Service.MailApp;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -55,7 +55,7 @@ namespace AutoDelivery.Api.Controllers
 
             // 拉取用户的邮箱配置
            // MailConfig mailConfig = user.Mailconfiguration;
-
+           
             return Ok();
         }
     }
