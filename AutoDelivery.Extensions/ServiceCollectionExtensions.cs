@@ -21,6 +21,7 @@ namespace AutoDelivery.Extensions
         }
         public static IServiceCollection ServiceRegister(this IServiceCollection services)
         {
+
              var serviceAssembly = Assembly.Load("AutoDelivery.Service");
             var implementationTypes = serviceAssembly.GetTypes().Where(t => t.IsAssignableTo(typeof(IocTag)) && !t.IsInterface && !t.IsAbstract);
 
