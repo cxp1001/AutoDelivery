@@ -10,7 +10,7 @@ using System.Security.Authentication;
 
 namespace AutoDelivery.Service.ProductApp
 {
-    public  class ProductService : IProductService
+    public class ProductService : IProductService
     {
         private readonly IRepository<Product> _productRepo;
         private readonly IRepository<ProductCategory> _categoryRepo;
@@ -23,6 +23,44 @@ namespace AutoDelivery.Service.ProductApp
             this._categoryRepo = categoryRepo;
             this._dbContext = dbContext;
         }
+
+
+        public async Task<int> CountProductsAsync(int userId,
+            string? productCategory,
+            string? productName,
+            string? productSku,
+            string? maker)
+        {
+            var currentUser = await _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
+            if (currentUser == null)
+            {
+                throw new NullReferenceException(
+                    JsonConvert.SerializeObject(new
+                    {
+                        Status = 2,
+                        ErrorMessage = "user is null",
+                        Time = DateTimeOffset.Now
+                    }
+                    )
+
+                );
+            }
+            var userProducts = currentUser.Products;
+            var uPId = userProducts.Select(p => p.Id).ToList();
+
+
+            var allProducts = _productRepo.GetQueryable().Where(p =>
+                (p.ProductCategory.Category == productCategory || string.IsNullOrWhiteSpace(productCategory)) &&
+                ((!string.IsNullOrWhiteSpace(productName) && !string.IsNullOrWhiteSpace(p.ProductName) && p.ProductName.ToLower().Contains(productName.ToLower())) || string.IsNullOrWhiteSpace(productName)) &&
+                ((!string.IsNullOrWhiteSpace(productSku) && !string.IsNullOrWhiteSpace(p.ProductSku) && p.ProductSku.ToLower().Contains(productSku.ToLower())) || string.IsNullOrWhiteSpace(productSku)) &&
+                ((!string.IsNullOrWhiteSpace(maker) && !string.IsNullOrWhiteSpace(p.Maker) && p.Maker.ToLower().Contains(maker.ToLower())) || string.IsNullOrWhiteSpace(maker))).Include(p => p.ProductCategory)
+               .AsNoTracking();
+
+            var productsCount = allProducts.Where(p => uPId.Contains(p.Id)).Count();
+            return productsCount;
+        }
+
+
 
         /// <summary>
         /// 获取产品

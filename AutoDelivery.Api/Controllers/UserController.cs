@@ -40,6 +40,7 @@ namespace AutoDelivery.Api.Controllers
                 OrderType = orderType
             });
 
+            var totalCount = await _userService.CountAllProductsAsync(userId);
             Result result = new();
             if (!res.Any())
             {
@@ -55,9 +56,10 @@ namespace AutoDelivery.Api.Controllers
                 result.Status = 21;
                 result.ErrorMessage = "Get all products of current user successful.";
                 result.ResultCount = res.Count();
+                result.TotalCount = totalCount;
             }
 
-            return JsonConvert.SerializeObject(result,setting);
+            return JsonConvert.SerializeObject(result, setting);
 
         }
 
@@ -86,6 +88,8 @@ namespace AutoDelivery.Api.Controllers
                 OrderType = orderType
             });
 
+            var totalCategories = await _userService.CountAllProductsAsync(userId);
+
             string resString;
             if (categoies.Any())
             {
@@ -95,8 +99,10 @@ namespace AutoDelivery.Api.Controllers
                     Time = DateTimeOffset.Now,
                     ErrorMessage = "pull categories successful",
                     Status = 22,
-                    ResultCount = categoies.Count()
-                },setting);
+                    ResultCount = categoies.Count(),
+                    TotalCount = totalCategories
+
+                }, setting);
             }
             else
             {
@@ -106,7 +112,7 @@ namespace AutoDelivery.Api.Controllers
                     Time = DateTimeOffset.Now,
                     ErrorMessage = "none category",
                     Status = 23,
-                },setting);
+                }, setting);
             }
 
             HttpContext.Response.StatusCode = 200;

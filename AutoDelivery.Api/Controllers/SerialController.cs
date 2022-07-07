@@ -30,9 +30,10 @@ namespace AutoDelivery.Api.Controllers
         public async Task<string> GetAllSerialsAsync()
         {
             //int userId = HttpContext.GetCurrentUserId();
-            int userId = 4;
+            int userId = 6;
 
             var listofSerials = await _serialService.GetAllSerialsOfCurrentUserAsync(userId);
+            var totalSerials = listofSerials.SelectMany(l => l.SerialInfo).Count();
 
             string resString;
 
@@ -63,7 +64,9 @@ namespace AutoDelivery.Api.Controllers
                         Time = DateTimeOffset.Now,
                         Data = listofSerials,
                         ResultCount = listofSerials.Count()
-                    },setting
+                        
+
+                },setting
                 );
                 }
 
@@ -77,7 +80,8 @@ namespace AutoDelivery.Api.Controllers
                             Status = 13,
                             Time = DateTimeOffset.Now,
                             Data = listofSerials,
-                            ResultCount = listofSerials.Count()
+                            ResultCount = listofSerials.Count(),
+                            TotalCount = totalSerials
                         },setting
                     );
                 }
@@ -117,7 +121,7 @@ namespace AutoDelivery.Api.Controllers
         {
 
             //int userId = HttpContext.GetCurrentUserId();
-            int userId = 4;
+            int userId = 6;
 
             var serials = await _serialService.GetSerialDtoAsync(userId, productName, serialNum, activeKey, subActiveKey, activeLink, used,
             new PageWithSortDto()
@@ -128,6 +132,8 @@ namespace AutoDelivery.Api.Controllers
                 OrderType = orderType
 
             });
+
+            var totalSerials = await _serialService.CountSerialsAsync(userId, productName, serialNum, activeKey, subActiveKey, activeLink, used);
 
             string resString;
             // 查询结果为空
@@ -153,8 +159,9 @@ namespace AutoDelivery.Api.Controllers
                       Status = 15,
                       Time = DateTimeOffset.Now,
                       Data = serials,
-                      ResultCount = serials.Count()
-                  },setting
+                      ResultCount = serials.Count(),
+                      TotalCount = totalSerials
+            },setting
                 );
             }
 

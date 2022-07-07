@@ -11,6 +11,8 @@ using AutoDelivery.Api.Extensions;
 using AutoDelivery.Core.Repository;
 using AutoDelivery.Domain.User;
 using AutoDelivery.Service.OrderApp;
+using AutoDelivery.Service.DeliveryApp;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace AutoDelivery.Api.Controllers
 {
@@ -19,11 +21,14 @@ namespace AutoDelivery.Api.Controllers
     public class WebhookController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IDeliveryService _deliveryService;
+        private readonly IMailService _mailService;
 
-        public WebhookController(IOrderService orderService)
+        public WebhookController(IOrderService orderService, IDeliveryService deliveryService, IMailService mailService)
         {
+            this._mailService = mailService;
             this._orderService = orderService;
-
+            this._deliveryService = deliveryService;
         }
 
 
@@ -32,30 +37,22 @@ namespace AutoDelivery.Api.Controllers
         /// </summary>
         /// <param name="shop"></param>
         /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> OrdersPaidAsync([FromQuery] string shop)
+        [HttpPost("OrderPaid"),SwaggerOperation(Summary ="处理'orderspaid'Webhook")]
+        public async Task<IActionResult> HandleOrdersPaidWebhookAsync([FromQuery] string shop)
         {
             // 从HTTP的请求体中获取webhook数据
             var order = await Request.DeserializeBodyAsync<Order>();
 
             // 将webhook中的订单信息保存到数据库中
-            var newOrderDetail = await _orderService.SaveOrdersFromWebhookAsync(order);
-
-            // 更新用户的订单信息
-            await _orderService.UpdateOrdersOfUser(shop, newOrderDetail);
+            var newOrderDetail = await _orderService.SaveOrdersFromWebhookAsync(order, shop);
 
             // 根据用户的订单信息从数据库中提取相应的序列号
+            var serialList = await _deliveryService.TakeSerialAsync(order);
 
-            // 1. 获取订单中的产品信息
-            var orderDetails = order.LineItems.Select(l => (Product: l.Title, Quantity: l.Quantity)).ToList();
-           
-            // 2. 根据产品信息从数据库中提取相对应的序列号等激活信息
-          
-       
-
+            string mailContent = serialList.ToString();
             // 拉取用户的邮箱配置
-           // MailConfig mailConfig = user.Mailconfiguration;
-           
+            _mailService.SendActiveEmail("251088569@qq.com","Active Message",mailContent);
+
             return Ok();
         }
     }

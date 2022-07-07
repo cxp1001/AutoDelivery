@@ -57,6 +57,61 @@ namespace AutoDelivery.Service.SerialApp
 
         }
 
+
+
+        // 序列号模糊查找结果数
+        public async Task<int> CountSerialsAsync(int userId,
+            string name,
+            string? serialNum,
+            string? activeKey,
+            string? subActiveKey,
+            string? activeLink,
+            bool used)
+        {
+            // 获取当前用户
+            var currentUser = await _userRepo.GetQueryable().AsNoTracking().Include(u => u.Products).SingleOrDefaultAsync(u => u.Id == userId);
+            if (currentUser == null)
+            {
+                throw new NullReferenceException(
+                    JsonConvert.SerializeObject(new
+                    {
+                        Status = 2,
+                        ErrorMessage = "user is null",
+                        Time = DateTimeOffset.Now
+                    }
+                    )
+
+                );
+            }
+            //获取用户的所有产品ID
+            var productsNames = currentUser.Products.Select(p => p.ProductName);
+            var serialsOfCurrentUser = _serialRepo.GetQueryable().AsNoTracking().Where(s => productsNames.Contains(s.ProductName));
+
+            // 查询
+            var serials = serialsOfCurrentUser.Where(
+                m => m.ProductName.ToLower().Contains(name.ToLower()) &&
+
+                 (!string.IsNullOrWhiteSpace(m.SerialNumber) && (!string.IsNullOrWhiteSpace(serialNum)) && (m.SerialNumber.ToLower().Contains(serialNum.ToLower()))
+                 || string.IsNullOrWhiteSpace(serialNum)) &&
+
+                (!string.IsNullOrWhiteSpace(m.ActiveKey) && (!string.IsNullOrWhiteSpace(activeKey)) && (m.ActiveKey.ToLower().Contains(activeKey.ToLower()))
+                 || string.IsNullOrWhiteSpace(activeKey)) &&
+
+                (!string.IsNullOrWhiteSpace(m.SubActiveKey) && (!string.IsNullOrWhiteSpace(subActiveKey)) && (m.SubActiveKey.ToLower().Contains(subActiveKey.ToLower()))
+                 || string.IsNullOrWhiteSpace(subActiveKey)) &&
+
+                (!string.IsNullOrWhiteSpace(m.ActiveLink) && (!string.IsNullOrWhiteSpace(activeLink)) && (m.ActiveLink.ToLower().Contains(activeLink.ToLower()))
+                 || string.IsNullOrWhiteSpace(activeLink)) &&
+
+                (m.Used == used)
+                );
+            var totalSerials = serials.Count();
+            return totalSerials;
+
+        }
+
+
+
         /// <summary>
         /// 序列号模糊查找
         /// </summary>
@@ -85,7 +140,25 @@ namespace AutoDelivery.Service.SerialApp
             // 分页跳过的页数
             int skip = (pageWithSortDto.PageIndex - 1) * pageWithSortDto.PageSize;
 
-            var serialsOfCurrentUser = GetAllSerialsOfCurrentUserAsync(userId).Result.AsNoTracking().SelectMany(s => s.SerialInfo);
+            // 获取当前用户
+            var currentUser = await _userRepo.GetQueryable().AsNoTracking().Include(u => u.Products).SingleOrDefaultAsync(u => u.Id == userId);
+            if (currentUser == null)
+            {
+                throw new NullReferenceException(
+                    JsonConvert.SerializeObject(new
+                    {
+                        Status = 2,
+                        ErrorMessage = "user is null",
+                        Time = DateTimeOffset.Now
+                    }
+                    )
+
+                );
+            }
+            //获取用户的所有产品ID
+            var productsNames = currentUser.Products.Select(p => p.ProductName);
+            var serialsOfCurrentUser = _serialRepo.GetQueryable().AsNoTracking().Where(s => productsNames.Contains(s.ProductName));
+
 
             // 查询
             var serials = serialsOfCurrentUser.Where(

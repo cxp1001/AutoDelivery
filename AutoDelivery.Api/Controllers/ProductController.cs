@@ -51,7 +51,7 @@ namespace AutoDelivery.Api.Controllers
 
             // 获取用户的Id
             //var userId = HttpContext.GetCurrentUserId();
-            var userId = 5;
+            var userId = 4;
 
             var productsDto = await _productService.GetProductDtoAsync(userId,
                 productCategory, productName, productSku, maker,
@@ -65,8 +65,10 @@ namespace AutoDelivery.Api.Controllers
 
             var productCount = productsDto.Count();
             Result result = new();
+            var totalCount = await _productService.CountProductsAsync(userId,
+                productCategory, productName, productSku, maker);
 
-            if (productCount != 0)
+            if (totalCount != 0)
             {
                 HttpContext.Response.StatusCode = 200;
                 result.Data = new
@@ -77,6 +79,7 @@ namespace AutoDelivery.Api.Controllers
                 result.Status = 0;
                 result.ErrorMessage = "Ok";
                 result.ResultCount = productCount;
+                result.TotalCount = totalCount;
 
             }
             else

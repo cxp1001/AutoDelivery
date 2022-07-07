@@ -11,15 +11,16 @@ namespace AutoDelivery.Service.OrderApp
     {
         private readonly IRepository<OrderDetail> _orderRepo;
         private readonly IRepository<UserAccount> _userRepo;
+
         public OrderService(IRepository<OrderDetail> orderRepo, IRepository<UserAccount> userRepo)
         {
             this._orderRepo = orderRepo;
             this._userRepo = userRepo;
-
+          
         }
 
 
-        public async Task<OrderDetail> SaveOrdersFromWebhookAsync(Order order)
+        public async Task<OrderDetail> SaveOrdersFromWebhookAsync(Order order,string shop)
         {
             // 将body中的信息拉取出来
             var itemQuantities = order.LineItems.Where(l => l.Quantity != null).Select(l => l.Quantity).Sum();
@@ -32,7 +33,8 @@ namespace AutoDelivery.Service.OrderApp
             var orderDetails = order.LineItems.Select(l => (Product: l.Title, Quantity: l.Quantity)).ToList();
             // var orderDetails = order.LineItems.Select(l => (product: l.Title, sku: l.SKU, quantity: l.Quantity)).ToLookup(o => o.product,o=>o.sku,o =>o.quantity).ToDictionary(l=>l.Key,l=>l.First());;
             var orderDetailsJson = JsonConvert.SerializeObject(orderDetails);
-
+            var user = await _userRepo.GetQueryable().Include(u=>u.OrderDetails).SingleAsync(u => u.ShopifyShopDomain == shop);
+           
             OrderDetail newOrderDetail = new()
             {
                 OrderId = orderId,
@@ -44,23 +46,22 @@ namespace AutoDelivery.Service.OrderApp
                 CustomerName = userName,
                 CustomerMail = email,
             };
+            user.OrderDetails.Add(newOrderDetail);
+            await _userRepo.UpdateAsync(user);
             // 将order信息保存到数据库中
-            return await _orderRepo.InsertAsync(newOrderDetail);
+            return newOrderDetail;
         }
 
 
-        public async Task<UserAccount> UpdateOrdersOfUser(string shop,OrderDetail order)
-        {
-            var currentUser = await _userRepo.GetQueryable().SingleAsync(u => u.ShopifyShopDomain == shop);
-            currentUser.OrderDetails.Add(order);
-            return await _userRepo.UpdateAsync(currentUser);
-        }
+        // public async Task<UserAccount> UpdateOrdersOfUser(string shop,OrderDetail order)
+        // {
+        //     var currentUser = await _userRepo.GetQueryable().SingleAsync(u => u.ShopifyShopDomain == shop);
+        //     currentUser.OrderDetails.Add(order);
+        //     return await _userRepo.UpdateAsync(currentUser);
+        // }
 
 
-        public async Task TaskSerial()
-        {
-            
-        }
+ 
 
 
 

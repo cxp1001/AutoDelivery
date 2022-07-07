@@ -10,5 +10,12 @@ namespace AutoDelivery.Service.SerialApp
         Task<Serial> EditSerialAsync(int userId, int productId, int serialId, string? serialNum, string? activeKey, string? subActiveKey, string? activeLink, bool? used = false);
         Task<IQueryable<SerialsInfoList>> GetAllSerialsOfCurrentUserAsync(int userId);
         Task<IEnumerable<Serial>> GetSerialDtoAsync(int userId, string name, string? serialNum, string? activeKey, string? subActiveKey, string? activeLink, bool used, PageWithSortDto pageWithSortDto);
+        Task<int> CountSerialsAsync(int userId,
+            string name,
+            string? serialNum,
+            string? activeKey,
+            string? subActiveKey,
+            string? activeLink,
+            bool used);
     }
 }

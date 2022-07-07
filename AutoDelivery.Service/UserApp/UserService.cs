@@ -24,12 +24,40 @@ namespace AutoDelivery.Service.UserApp
             this._dbContext = dbContext;
         }
 
+
+        public async Task<int> CountAllProductsAsync(int userId)
+        {
+            var currentUser = await _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
+            if (currentUser != null)
+            {
+
+                var productsCount = currentUser.Products.Count();
+
+                return productsCount;
+
+            }
+            else
+            {
+                throw new NullReferenceException(
+                    JsonConvert.SerializeObject(new
+                    {
+                        Status = 2,
+                        ErrorMessage = "user is null",
+                        Time = DateTimeOffset.Now
+                    }
+                    )
+                );
+            }
+
+        }
+
         public async Task<List<Product>> GetAllProductsAsync(int userId, PageWithSortDto pageWithSortDto)
         {
             pageWithSortDto.Sort ??= "ProductName";
             var skip = (pageWithSortDto.PageIndex - 1) * pageWithSortDto.PageSize;
 
             var currentUser = await _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
+
 
             if (currentUser != null)
             {
@@ -58,6 +86,16 @@ namespace AutoDelivery.Service.UserApp
                     )
                 );
             }
+        }
+
+
+        public async Task<int> CountCategories(int userId)
+        {
+            var user = await _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
+            var userProductsId = user.Products.Select(p => p.Id);
+            var product = _productRepo.GetQueryable().Include(p => p.ProductCategory).Where(p => p.ProductCategory != null).AsNoTracking();
+            var categoryCount = product.Where(p => userProductsId.Contains(p.Id)).Select(p => p.ProductCategory).Count();
+            return categoryCount;
         }
 
         /// <summary>

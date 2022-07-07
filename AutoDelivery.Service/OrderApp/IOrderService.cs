@@ -4,9 +4,8 @@ using ShopifySharp;
 
 namespace AutoDelivery.Service.OrderApp
 {
-    public interface IOrderService:IocTag
+    public interface IOrderService : IocTag
     {
-        Task<OrderDetail> SaveOrdersFromWebhookAsync(Order order);
-        Task<UserAccount> UpdateOrdersOfUser(string shop,OrderDetail order);
+        Task<OrderDetail> SaveOrdersFromWebhookAsync(Order order, string shop);
     }
 }

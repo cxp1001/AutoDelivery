@@ -3,8 +3,6 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<PlatformTarget>x64</PlatformTarget>
-		<BaseOutputPath>D:\zzzzz\AutoDelivery\AutoDelivery.Api\bin\</BaseOutputPath>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <Optimize>False</Optimize>
