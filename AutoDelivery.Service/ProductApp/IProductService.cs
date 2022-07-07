@@ -1,9 +1,10 @@
 using AutoDelivery.Core;
+using AutoDelivery.Core.Extensions;
 using AutoDelivery.Domain;
 
 namespace AutoDelivery.Service.ProductApp
 {
-    public interface IProductService : IocTag
+    public interface IProductService : IDependency
     {
 
         Task<Product> AddProductAsync(int userId, string name, string maker, string? mainName, string? subName, string? edition, string? version, string? commonName, string sku, string? detail, string? category, bool? hasActiveKey, bool? hasSubActiveKey, bool? hasActiveLink, bool? hasSerialNum, bool IsAvailable = false);

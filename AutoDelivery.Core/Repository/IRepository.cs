@@ -1,8 +1,10 @@
 using System.Linq.Expressions;
+using AutoDelivery.Core.Extensions;
+using AutoDelivery.Domain;
 
 namespace AutoDelivery.Core.Repository
 {
-    public interface IRepository<TEntity> where TEntity:class
+    public interface IRepository<TEntity> where TEntity:BaseModel
     {
         TEntity Delete(TEntity entity);
         Task<TEntity> DeleteAsync(TEntity entity);

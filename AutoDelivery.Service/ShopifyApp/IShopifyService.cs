@@ -1,3 +1,4 @@
+using AutoDelivery.Core.Extensions;
 using AutoDelivery.Domain;
 using AutoDelivery.Domain.Session;
 using AutoDelivery.Domain.User;
@@ -6,7 +7,7 @@ using ShopifySharp;
 
 namespace AutoDelivery.Service.ShopifyApp
 {
-    public interface IShopifyService : IocTag
+    public interface IShopifyService : IDependency
     {
         Task<bool> CheckShopAsync(Session session, string shop);
         Task<OAuthState> CheckTokenAsync(string state);

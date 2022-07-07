@@ -1,5 +1,5 @@
-d:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Debug\net6.0\AutoDelivery.Core.deps.json
-d:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Debug\net6.0\AutoDelivery.Core.runtimeconfig.json
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Debug\net6.0\AutoDelivery.Core.deps.json
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Debug\net6.0\AutoDelivery.Core.runtimeconfig.json
 d:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Debug\net6.0\AutoDelivery.Core.dll
 d:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Debug\net6.0\AutoDelivery.Core.pdb
 d:\zzzzz\AutoDelivery\AutoDelivery.Core\bin\Debug\net6.0\AutoDelivery.Domain.dll
@@ -9,9 +9,9 @@ d:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\AutoDelivery.Core.Gener
 d:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\AutoDelivery.Core.AssemblyInfoInputs.cache
 d:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\AutoDelivery.Core.AssemblyInfo.cs
 d:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\AutoDelivery.Core.csproj.CoreCompileInputs.cache
-d:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\AutoDelivery.Core.csproj.CopyComplete
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\AutoDelivery.Core.csproj.CopyComplete
 d:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\AutoDelivery.Core.dll
 d:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\refint\AutoDelivery.Core.dll
 d:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\AutoDelivery.Core.pdb
-d:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\AutoDelivery.Core.genruntimeconfig.cache
-d:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\ref\AutoDelivery.Core.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\AutoDelivery.Core.genruntimeconfig.cache
+D:\zzzzz\AutoDelivery\AutoDelivery.Core\obj\Debug\net6.0\ref\AutoDelivery.Core.dll

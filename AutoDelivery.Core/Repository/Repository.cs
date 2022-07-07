@@ -2,11 +2,11 @@ using AutoDelivery.Core.Core;
 using System.Linq.Expressions;
 using AutoDelivery.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
-
+using AutoDelivery.Domain;
 
 namespace AutoDelivery.Core.Repository
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseModel
     {
         private readonly AutoDeliveryContext _dbContext;
         public Repository(AutoDeliveryContext dbContext)

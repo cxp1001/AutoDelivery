@@ -5,10 +5,11 @@ using AutoDelivery.Domain.Mail;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using AutoDelivery.Domain.User;
+using AutoDelivery.Core.Extensions;
 
 namespace AutoDelivery.Core.Core
 {
-    public partial class AutoDeliveryContext : DbContext
+    public partial class AutoDeliveryContext : DbContext, IDependency
     {
 
         public DbSet<UserAccount> Users { get; set; }
