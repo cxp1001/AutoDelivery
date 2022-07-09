@@ -13,6 +13,7 @@ using AutoDelivery.Domain.User;
 using AutoDelivery.Service.OrderApp;
 using AutoDelivery.Service.DeliveryApp;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text;
 
 namespace AutoDelivery.Api.Controllers
 {
@@ -49,7 +50,8 @@ namespace AutoDelivery.Api.Controllers
             // 根据用户的订单信息从数据库中提取相应的序列号
             var serialList = await _deliveryService.TakeSerialAsync(order);
 
-            string mailContent = serialList.ToString();
+            var mailContent = "aaa";
+
             // 拉取用户的邮箱配置
             _mailService.SendActiveEmail("251088569@qq.com","Active Message",mailContent);
 

@@ -88,7 +88,7 @@ namespace AutoDelivery.Api.Controllers
                 OrderType = orderType
             });
 
-            var totalCategories = await _userService.CountAllProductsAsync(userId);
+            var totalCategories = await _userService.CountCategories(userId);
 
             string resString;
             if (categoies.Any())

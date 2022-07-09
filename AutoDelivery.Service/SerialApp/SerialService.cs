@@ -26,6 +26,7 @@ namespace AutoDelivery.Service.SerialApp
             this._dbContext = dbContext;
         }
 
+
         /// <summary>
         /// 拉取当前用户的所有产品-序列号信息
         /// </summary>
@@ -33,6 +34,8 @@ namespace AutoDelivery.Service.SerialApp
         /// <returns></returns>
         public async Task<IQueryable<SerialsInfoList>> GetAllSerialsOfCurrentUserAsync(int userId)
         {
+
+
             // 获取当前用户
             var currentUser = await _userRepo.GetQueryable().AsNoTracking().Include(u => u.Products).SingleOrDefaultAsync(u => u.Id == userId);
 
@@ -53,7 +56,50 @@ namespace AutoDelivery.Service.SerialApp
             var productIdsOfCurrentUser = currentUser.Products.Where(p => p != null).Select(p => p.Id);
 
             var serialsOfAllProducts = _productRepo.GetQueryable().AsNoTracking().Include(p => p.SerialsInventory).Where(p => productIdsOfCurrentUser.Contains(p.Id) && p != null).Select(p => new SerialsInfoList { ProductId = p.Id, ProductName = p.ProductName, SerialInfo = p.SerialsInventory });
+
             return serialsOfAllProducts;
+
+        }
+
+
+
+
+        /// <summary>
+        /// 拉取当前用户的所有产品-序列号信息,并添加分页和排序
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<IQueryable<SerialsInfoList>> GetAllSerialsOfCurrentUserAsync(int userId, PageWithSortDto pageWithSortDto)
+        {
+
+            // 排序字符
+            pageWithSortDto.Sort ??= "ProductName";
+            // 分页跳过的页数
+            int skip = (pageWithSortDto.PageIndex - 1) * pageWithSortDto.PageSize;
+
+            // 获取当前用户
+            var currentUser = await _userRepo.GetQueryable().AsNoTracking().Include(u => u.Products).SingleOrDefaultAsync(u => u.Id == userId);
+
+            if (currentUser == null)
+            {
+                throw new NullReferenceException(
+                    JsonConvert.SerializeObject(new
+                    {
+                        Status = 2,
+                        ErrorMessage = "user is null",
+                        Time = DateTimeOffset.Now
+                    }
+                    )
+
+                );
+            }
+
+            var productIdsOfCurrentUser = currentUser.Products.Where(p => p != null).Select(p => p.Id);
+
+            var serialsOfAllProducts = _productRepo.GetQueryable().AsNoTracking().Include(p => p.SerialsInventory).Where(p => productIdsOfCurrentUser.Contains(p.Id) && p != null).Select(p => new SerialsInfoList { ProductId = p.Id, ProductName = p.ProductName, SerialInfo = p.SerialsInventory });
+
+            return serialsOfAllProducts.OrderBy(pageWithSortDto.Sort, (Convert.ToBoolean(pageWithSortDto.OrderType))).Skip(skip).Take(pageWithSortDto.PageSize);
+
 
         }
 
@@ -177,7 +223,7 @@ namespace AutoDelivery.Service.SerialApp
                  || string.IsNullOrWhiteSpace(activeLink)) &&
 
                 (m.Used == used)
-                ).OrderBy(pageWithSortDto.Sort).Skip(skip).Take(pageWithSortDto.PageSize);
+                ).OrderBy(pageWithSortDto.Sort,(Convert.ToBoolean(pageWithSortDto.OrderType))).Skip(skip).Take(pageWithSortDto.PageSize);
 
 
 

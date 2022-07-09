@@ -112,9 +112,7 @@ namespace AutoDelivery.Service.ProductApp
                 ((!string.IsNullOrWhiteSpace(maker) && !string.IsNullOrWhiteSpace(p.Maker) && p.Maker.ToLower().Contains(maker.ToLower())) || string.IsNullOrWhiteSpace(maker))).Include(p => p.ProductCategory)
                .AsNoTracking();
 
-            var resultProducts = allProducts.Where(p => uPId.Contains(p.Id)).OrderBy(pageWithSortDto.Sort).Skip(skip).Take(pageWithSortDto.PageSize);
-
-
+            var resultProducts = allProducts.Where(p => uPId.Contains(p.Id)).OrderBy(pageWithSortDto.Sort,(Convert.ToBoolean(pageWithSortDto.OrderType))).Skip(skip).Take(pageWithSortDto.PageSize);
             return await resultProducts.ToListAsync();
 
         }

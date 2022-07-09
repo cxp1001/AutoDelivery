@@ -30,7 +30,7 @@ namespace AutoDelivery.Service.DeliveryApp
             var validOrders = itemInfos.Where(o => o.Quantity != 0);
             var currentOrder = await  _orderRepo.GetQueryable().Include(o => o.RelatedSerials).SingleAsync(o => o.OrderId == orderId);
 
-            List<(string Product, List<Serial>)> serialList = new();
+            List<(string Product, List<Serial> serial)> serialList = new();
 
 
             foreach (var validOrder in validOrders)
@@ -50,12 +50,17 @@ namespace AutoDelivery.Service.DeliveryApp
                 await _dbContext.SaveChangesAsync();
             }
 
-            // 将序列号信息添加到订单中
-
-
+           
             return serialList;
 
 
+        }
+
+
+
+        public async Task BuildMailContent(List<(string,List<Serial>)> serials)
+        {
+            
         }
 
 

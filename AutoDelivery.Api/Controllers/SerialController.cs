@@ -22,17 +22,28 @@ namespace AutoDelivery.Api.Controllers
         }
 
         /// <summary>
-        /// 获取当前用户的所有产品和对应的序列号集合
+        /// 获取当前用户的所有产品和对应的序列号集合并排序和分页
         /// </summary>
         /// <returns></returns>
         [SwaggerOperation(Summary = "获取当前用户的所有产品和对应的序列号集合")]
         [HttpGet("GetAllSerials")]
-        public async Task<string> GetAllSerialsAsync()
+        public async Task<string> GetAllSerialsAsync(int pageIndex = 1,
+            int pageSize = 20,
+            string sort = "ProductName",
+            OrderType orderType = OrderType.Asc)
         {
             //int userId = HttpContext.GetCurrentUserId();
             int userId = 6;
 
-            var listofSerials = await _serialService.GetAllSerialsOfCurrentUserAsync(userId);
+            var listofSerials = await _serialService.GetAllSerialsOfCurrentUserAsync(userId, 
+            new PageWithSortDto()
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Sort = sort,
+                OrderType = orderType
+
+            });
             var totalSerials = listofSerials.SelectMany(l => l.SerialInfo).Count();
 
             string resString;
@@ -48,7 +59,7 @@ namespace AutoDelivery.Api.Controllers
                          Time = DateTimeOffset.Now,
                          Data = null,
                          ResultCount = 0
-                     },setting
+                     }, setting
                  );
             }
             else
@@ -64,9 +75,9 @@ namespace AutoDelivery.Api.Controllers
                         Time = DateTimeOffset.Now,
                         Data = listofSerials,
                         ResultCount = listofSerials.Count()
-                        
 
-                },setting
+
+                    }, setting
                 );
                 }
 
@@ -82,13 +93,13 @@ namespace AutoDelivery.Api.Controllers
                             Data = listofSerials,
                             ResultCount = listofSerials.Count(),
                             TotalCount = totalSerials
-                        },setting
+                        }, setting
                     );
                 }
 
             }
             return resString;
-        } 
+        }
 
 
         /// <summary>
@@ -147,7 +158,7 @@ namespace AutoDelivery.Api.Controllers
                        Time = DateTimeOffset.Now,
                        Data = null,
                        ResultCount = 0
-                   },setting
+                   }, setting
                 );
             }
             else
@@ -161,7 +172,7 @@ namespace AutoDelivery.Api.Controllers
                       Data = serials,
                       ResultCount = serials.Count(),
                       TotalCount = totalSerials
-            },setting
+                  }, setting
                 );
             }
 
@@ -205,7 +216,7 @@ namespace AutoDelivery.Api.Controllers
                        Time = DateTimeOffset.Now,
                        Data = null,
                        ResultCount = 0
-                   },setting
+                   }, setting
                 );
             }
             else
@@ -218,7 +229,7 @@ namespace AutoDelivery.Api.Controllers
                       Time = DateTimeOffset.Now,
                       Data = serial,
                       ResultCount = 1
-                  },setting
+                  }, setting
                 );
             }
 
@@ -262,7 +273,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 17,
                     ErrorMessage = $"Serial of {updatedSerial.ProductName} updated successful",
                     Time = DateTimeOffset.Now
-                },setting);
+                }, setting);
 
                 return Ok(goodResString);
             }
@@ -273,7 +284,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 18,
                     ErrorMessage = $"Serial of {updatedSerial.ProductName} updated failed",
                     Time = DateTimeOffset.Now
-                },setting);
+                }, setting);
 
                 return BadRequest(badResString);
             }
@@ -302,7 +313,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 19,
                     ErrorMessage = $"Serial of {deletedSerial.ProductName} deleted successful",
                     Time = DateTimeOffset.Now
-                },setting);
+                }, setting);
 
                 return Ok(goodResString);
             }
@@ -313,7 +324,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 20,
                     ErrorMessage = $"Failed to delete serial of {deletedSerial.ProductName}.",
                     Time = DateTimeOffset.Now
-                },setting);
+                }, setting);
 
                 return BadRequest(badResString);
             }

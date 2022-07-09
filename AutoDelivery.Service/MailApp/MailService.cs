@@ -21,16 +21,16 @@ namespace AutoDelivery.Service.MailApp
         public  bool SendActiveEmail(string mailTo, string mailTitle, string mailContent)
         {
 
-            string mailAccount = "251088569@qq.com";
-            string pwd = "annmbxgrqtdvbhdi";
+            string mailAccount = "udeiie@live.com";
+            string pwd = "Sunrisep1001";
 
 
             //邮件服务设置
-            SmtpClient smtpClient = new SmtpClient("smtp.qq.com", 587);
+            SmtpClient smtpClient = new SmtpClient("smtp.office365.com", 587);
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;//指定电子邮件发送方式
             smtpClient.EnableSsl = true;//使用安全加密连接
             smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential("251088569", pwd);//设置发送账号密码
+            smtpClient.Credentials = new NetworkCredential("udeiie@live.com", pwd);//设置发送账号密码
             MailAddress from = new MailAddress(mailAccount, "mailForm", Encoding.UTF8);
             MailAddress to = new MailAddress(mailTo, "mailTo", Encoding.UTF8);
 
@@ -55,6 +55,11 @@ namespace AutoDelivery.Service.MailApp
                 throw ex;
             }
         }
+
+
+
+
+    
 
     }
 }

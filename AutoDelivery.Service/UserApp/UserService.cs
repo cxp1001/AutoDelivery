@@ -59,18 +59,15 @@ namespace AutoDelivery.Service.UserApp
             var currentUser = await _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
 
 
+
+
+
             if (currentUser != null)
             {
-                List<Product> products;
-                if (pageWithSortDto.OrderType == OrderType.Asc)
-                {
-                    products = currentUser.Products.OrderBy(p => p.ProductName).Skip(skip).Take(pageWithSortDto.PageSize).ToList();
-                }
-                else
-                {
-                    products = currentUser.Products.OrderByDescending(p => p.ProductName).Skip(skip).Take(pageWithSortDto.PageSize).ToList();
 
-                }
+                var products = _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().SingleOrDefault(u => u.Id == userId).Products.AsQueryable().
+           OrderBy(pageWithSortDto.Sort, (Convert.ToBoolean(pageWithSortDto.OrderType))).Skip(skip).Take(pageWithSortDto.PageSize).ToList();
+
                 return products;
 
             }
@@ -94,7 +91,7 @@ namespace AutoDelivery.Service.UserApp
             var user = await _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
             var userProductsId = user.Products.Select(p => p.Id);
             var product = _productRepo.GetQueryable().Include(p => p.ProductCategory).Where(p => p.ProductCategory != null).AsNoTracking();
-            var categoryCount = product.Where(p => userProductsId.Contains(p.Id)).Select(p => p.ProductCategory).Count();
+            var categoryCount = product.Where(p => userProductsId.Contains(p.Id)).Select(p => p.ProductCategory).Distinct().Count();
             return categoryCount;
         }
 
@@ -116,17 +113,8 @@ namespace AutoDelivery.Service.UserApp
             var product = _productRepo.GetQueryable().Include(p => p.ProductCategory).Where(p => p.ProductCategory != null).AsNoTracking();
             var categories = product.Where(p => userProductsId.Contains(p.Id)).Select(p => p.ProductCategory);
 
+            return categories.Distinct().OrderBy(pageWithSortDto.Sort, (Convert.ToBoolean(pageWithSortDto.OrderType))).Skip(skip).Take(pageWithSortDto.PageSize).ToList();
 
-            if (pageWithSortDto.OrderType == OrderType.Asc)
-            {
-
-                return categories.Distinct().OrderBy(c => c.Category).Skip(skip).Take(pageWithSortDto.PageSize).ToList();
-
-            }
-            else
-            {
-                return categories.Distinct().OrderByDescending(c => c.Category).Skip(skip).Take(pageWithSortDto.PageSize).ToList();
-            }
 
         }
     }

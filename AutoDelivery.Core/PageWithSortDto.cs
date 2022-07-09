@@ -12,7 +12,7 @@ namespace AutoDelivery.Core
 
     public enum OrderType
     {
-        Asc,
+        Asc ,
         Desc
     }
 }
