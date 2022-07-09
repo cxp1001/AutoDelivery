@@ -60,6 +60,7 @@ namespace AutoDelivery.Api.Extensions
             }
 
             return JsonConvert.DeserializeObject<T>(await request.ReadRawBodyAsync(), serializerSettings);
+            
         }
 
     }
