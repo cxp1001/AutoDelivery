@@ -1,29 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace AutoDelivery.Domain
+namespace AutoDelivery.Service.AutoMapper
 {
-    public partial class Serial:BaseModel
+    public class SerialDto
     {
-        // 商品名
+        public int SerialId { get; set; }
         public string ProductName { get; set; } = null!;
-        // 商品のSKU
+        // 商品SKU
         public string ProductSku { get; set; } = null!;
-        // 該当商品のシリアルキー
+        // 商品序列号
         public string? SerialNumber { get; set; }
-        // アクティブキー
+        // 商品激活码
         public string? ActiveKey { get; set; }
-        // サブアクティブキー
+        // 商品的第二个激活码
         public string? SubActiveKey { get; set; }
-        // アクティブリンク
+        // 商品的激活链接
         public string? ActiveLink { get; set; }
-        // 追加された時間
+        // 序列号生成日期
         public DateTimeOffset CreatedTime { get; set; }
-        // お客様に発送された時間
+        // 序列号交付日期
         public DateTimeOffset? ShippedTime { get; set; }
-        // 使い済み
+        // 已使用
         public bool Used { get; set; } = false;
-        public byte[] RowVersion { get; set; }
-        
     }
 }

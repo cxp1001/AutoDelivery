@@ -30,12 +30,12 @@ namespace AutoDelivery.Api.Controllers
         public async Task<string> GetAllSerialsAsync(int pageIndex = 1,
             int pageSize = 20,
             string sort = "ProductName",
-            OrderType orderType = OrderType.Asc)
+            OrderType orderType = OrderType.Asc, int userId = 4)
         {
             //int userId = HttpContext.GetCurrentUserId();
-            int userId = 6;
 
-            var listofSerials = await _serialService.GetAllSerialsOfCurrentUserAsync(userId, 
+
+            var listofSerials = await _serialService.GetAllSerialsOfCurrentUserAsync(userId,
             new PageWithSortDto()
             {
                 PageIndex = pageIndex,
@@ -44,7 +44,9 @@ namespace AutoDelivery.Api.Controllers
                 OrderType = orderType
 
             });
-            var totalSerials = listofSerials.SelectMany(l => l.SerialInfo).Count();
+
+            var totalSerials = await _serialService.CountAllProductsOfCurrentUserAsync(userId);
+            var resultCount = listofSerials.SelectMany(l => l.SerialInfo).Count();
 
             string resString;
 
@@ -74,8 +76,8 @@ namespace AutoDelivery.Api.Controllers
                         Status = 12,
                         Time = DateTimeOffset.Now,
                         Data = listofSerials,
-                        ResultCount = listofSerials.Count()
-
+                        ResultCount = resultCount,
+                        TotalCount = totalSerials
 
                     }, setting
                 );
@@ -91,7 +93,7 @@ namespace AutoDelivery.Api.Controllers
                             Status = 13,
                             Time = DateTimeOffset.Now,
                             Data = listofSerials,
-                            ResultCount = listofSerials.Count(),
+                            ResultCount = resultCount,
                             TotalCount = totalSerials
                         }, setting
                     );
@@ -106,7 +108,7 @@ namespace AutoDelivery.Api.Controllers
         /// 根据用户输入的信息模糊查找满足条件的序列号
         /// </summary>
         /// <param name="productName"></param>
-        /// <param name="serialNum"></param>
+        /// <param name="serialNumber"></param>
         /// <param name="activeKey"></param>
         /// <param name="subActiveKey"></param>
         /// <param name="activeLink"></param>
@@ -116,10 +118,10 @@ namespace AutoDelivery.Api.Controllers
         /// <param name="sort"></param>
         /// <param name="orderType"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("GetSerials")]
         [SwaggerOperation(Summary = "根据用户输入的信息模糊查找满足条件的序列号")]
         public async Task<string> GetSerialsAsync(string productName,
-            string? serialNum,
+            string? serialNumber,
             string? activeKey,
             string? subActiveKey,
             string? activeLink,
@@ -127,14 +129,15 @@ namespace AutoDelivery.Api.Controllers
             int pageIndex = 1,
             int pageSize = 20,
             string sort = "ProductName",
-            OrderType orderType = OrderType.Asc
+            OrderType orderType = OrderType.Asc,
+            int userId = 4
              )
         {
 
             //int userId = HttpContext.GetCurrentUserId();
-            int userId = 6;
 
-            var serials = await _serialService.GetSerialDtoAsync(userId, productName, serialNum, activeKey, subActiveKey, activeLink, used,
+
+            var serials = await _serialService.GetSerialDtoAsync(userId, productName, serialNumber, activeKey, subActiveKey, activeLink, used,
             new PageWithSortDto()
             {
                 PageIndex = pageIndex,
@@ -144,7 +147,7 @@ namespace AutoDelivery.Api.Controllers
 
             });
 
-            var totalSerials = await _serialService.CountSerialsAsync(userId, productName, serialNum, activeKey, subActiveKey, activeLink, used);
+            var totalSerials = await _serialService.CountSerialsAsync(userId, productName, serialNumber, activeKey, subActiveKey, activeLink, used);
 
             string resString;
             // 查询结果为空
@@ -184,7 +187,7 @@ namespace AutoDelivery.Api.Controllers
         /// 添加序列号
         /// </summary>
         /// <param name="productId">通过用户在下拉列表中选择的产品来获取当前产品的Id</param>
-        /// <param name="serialNum"></param>
+        /// <param name="serialNumber"></param>
         /// <param name="activeKey"></param>
         /// <param name="subActiveKey"></param>
         /// <param name="activeLink"></param>
@@ -193,17 +196,18 @@ namespace AutoDelivery.Api.Controllers
         [HttpPost]
         [SwaggerOperation(Summary = "添加序列号")]
         public async Task<string> AddNewSerialAsync(int productId,
-            string? serialNum,
+            string? serialNumber,
             string? activeKey,
             string? subActiveKey,
             string? activeLink,
-            bool used = false
+            bool used = false,
+            int userId = 4
            )
         {
             //int userId = HttpContext.GetCurrentUserId();
-            int userId = 4;
 
-            var serial = await _serialService.AddSerialAsync(userId, productId, serialNum, activeKey, subActiveKey, activeLink, used);
+
+            var serial = await _serialService.AddSerialAsync(userId, productId, serialNumber, activeKey, subActiveKey, activeLink, used);
             string resString;
 
             if (serial == null)
@@ -242,7 +246,7 @@ namespace AutoDelivery.Api.Controllers
         /// </summary>
         /// <param name="productId"></param>
         /// <param name="serialId"></param>
-        /// <param name="serialNum"></param>
+        /// <param name="serialNumber"></param>
         /// <param name="activeKey"></param>
         /// <param name="subActiveKey"></param>
         /// <param name="activeLink"></param>
@@ -252,19 +256,20 @@ namespace AutoDelivery.Api.Controllers
         [SwaggerOperation(Summary = "编辑用户选择的产品的序列号")]
         public async Task<IActionResult> UpdateSerialAsync(int productId,
             int serialId,
-            string? serialNum,
+            string? serialNumber,
             string? activeKey,
             string? subActiveKey,
             string? activeLink,
-            bool? used = false
+            bool? used = false,
+            int userId = 4
         )
         {
             //int userId = HttpContext.GetCurrentUserId();
-            int userId = 4;
 
 
 
-            var updatedSerial = await _serialService.EditSerialAsync(userId, productId, serialId, serialNum, activeKey, subActiveKey, activeLink, used);
+
+            var updatedSerial = await _serialService.EditSerialAsync(userId, productId, serialId, serialNumber, activeKey, subActiveKey, activeLink, used);
             if (updatedSerial != null)
             {
 
@@ -300,10 +305,11 @@ namespace AutoDelivery.Api.Controllers
         [HttpDelete]
         [SwaggerOperation(Summary = "删除序列号")]
         public async Task<IActionResult> DeleteSerialAsync(int productId,
-            int serialId)
+            int serialId,
+            int userId = 4)
         {
             //int userId = HttpContext.GetCurrentUserId();
-            int userId = 4;
+
 
             var deletedSerial = await _serialService.DeleteSerialAsync(userId, productId, serialId);
             if (deletedSerial != null)
@@ -322,7 +328,7 @@ namespace AutoDelivery.Api.Controllers
                 var badResString = JsonConvert.SerializeObject(new Result
                 {
                     Status = 20,
-                    ErrorMessage = $"Failed to delete serial of {deletedSerial.ProductName}.",
+                    ErrorMessage = "Failed to delete serial.",
                     Time = DateTimeOffset.Now
                 }, setting);
 

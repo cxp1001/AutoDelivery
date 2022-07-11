@@ -25,13 +25,13 @@ namespace AutoDelivery.Api.Controllers
         // 获取当前用户的所有产品
         [SwaggerOperation(Summary = "拉取当前用户的所有产品")]
         [HttpGet("GetAllProducts")]
-        public async Task<IEnumerable> GetAllProductsAsync(int pageIndex = 1,
+        public async Task<IEnumerable> GetAllProductsAsync(int userId=4,int pageIndex = 1,
           int pageSize = 20,
           string sort = "ProductName",
           OrderType orderType = OrderType.Asc)
         {
             //var userId = HttpContext.GetCurrentUserId();
-            var userId = 4;
+         
             var res = await _userService.GetAllProductsAsync(userId, new PageWithSortDto
             {
                 PageIndex = pageIndex,
@@ -69,15 +69,15 @@ namespace AutoDelivery.Api.Controllers
         /// 获取当前用户设置的所有产品分类
         /// </summary>
         /// <returns></returns>
-        [SwaggerOperation(Summary = "拉取当前用户设置的所有产品分类")]
+        [SwaggerOperation(Summary = "拉取当前用户设置的所有产品分类信息")]
         [HttpGet("GetCategories")]
-        public async Task<string> GetCategoriesAsync(int pageIndex = 1,
+        public async Task<string> GetCategoriesAsync(int userId=4,int pageIndex = 1,
           int pageSize = 20,
           string sort = "ProductName",
           OrderType orderType = OrderType.Asc)
         {
             //var userId = HttpContext.GetCurrentUserId();
-            var userId = 4;
+     
 
 
             var categoies = await _userService.GetProductCategoriesAsync(userId, new PageWithSortDto

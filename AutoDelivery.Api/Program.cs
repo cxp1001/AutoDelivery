@@ -4,8 +4,10 @@ using AutoDelivery.Core.Repository;
 using AutoDelivery.Domain.Mail;
 using AutoDelivery.Domain.Secrets;
 using AutoDelivery.Domain.Url;
+using AutoDelivery.Service.AutoMapper;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,6 +45,11 @@ builder.Services.AddDbContext<AutoDeliveryContext>(
     opt => opt.UseSqlServer(connStr)
     );
 
+builder.Services.AddAutoMapper(typeof(MapperProfile));
+var mapperConfig = new MapperConfiguration(cfg => { });
+mapperConfig.CompileMappings();
+
+
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(
     containerBuilder =>
@@ -52,6 +59,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(
         containerBuilder.RegisterType<ApplicationUrls>().As<IApplicationUrls>();
         containerBuilder.RegisterType<MailConfig>().As<IMailConfig>();
         containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+        containerBuilder.RegisterType<Mapper>().As<IMapper>();
     }
 );
 

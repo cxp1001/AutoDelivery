@@ -5,6 +5,9 @@ namespace AutoDelivery.Domain
         public int? ProductId { get; set; }
         public string? ProductName { get; set; }
         public List<Serial>? SerialInfo { get; set; }
+        public int SerialsCount => SerialInfo.Count();
+
+
 
     }
 }

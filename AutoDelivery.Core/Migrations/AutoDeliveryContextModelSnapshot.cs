@@ -48,7 +48,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MailConfigs");
+                    b.ToTable("MailConfigs", (string)null);
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.OrderDetail", b =>
@@ -91,7 +91,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasIndex("UserAccountId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.Product", b =>
@@ -163,7 +163,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasIndex("UserAccountId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.ProductCategory", b =>
@@ -180,7 +180,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.Serial", b =>
@@ -238,7 +238,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Serials");
+                    b.ToTable("Serials", (string)null);
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.User.OAuthState", b =>
@@ -262,7 +262,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LoginStates");
+                    b.ToTable("LoginStates", (string)null);
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.User.UserAccount", b =>
@@ -297,7 +297,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasIndex("MailconfigurationId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.OrderDetail", b =>

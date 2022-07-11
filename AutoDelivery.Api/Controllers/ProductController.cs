@@ -46,12 +46,13 @@ namespace AutoDelivery.Api.Controllers
              int pageIndex = 1,
             int pageSize = 20,
             string sort = "ProductName",
-            OrderType orderType = OrderType.Asc)
+            OrderType orderType = OrderType.Asc,
+            int userId = 4)
         {
 
             // 获取用户的Id
             //var userId = HttpContext.GetCurrentUserId();
-            var userId = 4;
+
 
             var productsDto = await _productService.GetProductDtoAsync(userId,
                 productCategory, productName, productSku, maker,
@@ -92,7 +93,7 @@ namespace AutoDelivery.Api.Controllers
 
             }
 
-            return JsonConvert.SerializeObject(result,setting);
+            return JsonConvert.SerializeObject(result, setting);
 
         }
 
@@ -118,7 +119,7 @@ namespace AutoDelivery.Api.Controllers
         /// <returns></returns>
         [SwaggerOperation(Summary = "添加产品")]
         [HttpPost]
-        
+
         public async Task<IActionResult> AddProductAsync(string productName,
             string maker,
             string? mainName,
@@ -133,11 +134,11 @@ namespace AutoDelivery.Api.Controllers
             bool? hasSubActiveKey,
             bool? hasActiveLink,
             bool? hasSerialNum,
-            bool isAvailable = false)
+            bool isAvailable = false, int userId = 4)
         {
             // 获取用户的Id
             // var userId = HttpContext.GetCurrentUserId();
-            var userId = 4;
+
 
             var insertedProduct = await _productService.AddProductAsync(userId, productName, maker, mainName, subName, productEdition, productVersion, productCommonName, productSku, productDetails, productCategory, hasActiveKey, hasSubActiveKey, hasActiveLink, hasSerialNum, isAvailable);
 
@@ -148,7 +149,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 3,
                     ErrorMessage = $"Product {insertedProduct.ProductName} added successfully",
                     Time = DateTimeOffset.Now
-                },setting);
+                }, setting);
 
                 return Ok(goodResString);
             }
@@ -159,7 +160,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 4,
                     ErrorMessage = $"Failed to add product {productName}",
                     Time = DateTimeOffset.Now
-                },setting);
+                }, setting);
                 return BadRequest(badResString);
             }
         }
@@ -206,11 +207,12 @@ namespace AutoDelivery.Api.Controllers
             bool? hasSubActiveKey,
             bool? hasActiveLink,
             bool? hasSerialNum,
-            bool IsAvailable)
+            bool IsAvailable,
+            int userId=4)
         {
             // 获取用户的Id
             // var userId = HttpContext.GetCurrentUserId();
-            var userId = 4;
+           
 
             var updatedProduct = await _productService.EditProductAsync(userId, id, productName, maker, mainName, subName, productEdition, productVersion, productCommonName, productSku, productDetails, productCategory, categoryId,
             hasActiveKey, hasSubActiveKey, hasActiveLink, hasSerialNum, IsAvailable);
@@ -221,7 +223,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 6,
                     ErrorMessage = $"Product {updatedProduct.ProductName}'s information updated successfully",
                     Time = DateTimeOffset.Now
-                },setting);
+                }, setting);
 
                 return Ok(goodResString);
 
@@ -233,7 +235,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 7,
                     ErrorMessage = $"The update of the product {updatedProduct.ProductName}'s information was unsuccessful",
                     Time = DateTimeOffset.Now
-                },setting);
+                }, setting);
 
                 return Ok(badResString);
             }
@@ -242,12 +244,12 @@ namespace AutoDelivery.Api.Controllers
 
         [HttpDelete]
         [SwaggerOperation(Summary = "删除产品")]
-        public async Task<ActionResult> DeleteProductAsync(int id)
+        public async Task<ActionResult> DeleteProductAsync(int userId,int id)
         {
 
             // 获取用户的Id
             // var userId = HttpContext.GetCurrentUserId();
-            var userId = 4;
+           
 
             var deletedProduct = await _productService.DeleteProductAsync(userId, id);
 
@@ -258,7 +260,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 9,
                     ErrorMessage = $"Product {deletedProduct.ProductName}'s information deleted successfully",
                     Time = DateTimeOffset.Now
-                },setting);
+                }, setting);
 
                 return Ok(goodResString);
 
@@ -270,7 +272,7 @@ namespace AutoDelivery.Api.Controllers
                     Status = 10,
                     ErrorMessage = $"The delete of the product was unsuccessful",
                     Time = DateTimeOffset.Now
-                },setting);
+                }, setting);
 
                 return Ok(badResString);
             }

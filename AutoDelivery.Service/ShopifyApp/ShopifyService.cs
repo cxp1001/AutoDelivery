@@ -52,8 +52,8 @@ namespace AutoDelivery.Service.ShopifyApp
         // 查看用于oAuth验证的一次性token是否存在于数据库中
         public async Task<OAuthState> CheckTokenAsync(string state)
         {
-
-            var dbToken = await _stateRepo.GetQueryable().FirstOrDefaultAsync(l => l.Token == state);
+            var dbToken = await _stateRepo.GetAsync(l => l.Token == state);
+      
             return dbToken;
 
         }
@@ -69,7 +69,7 @@ namespace AutoDelivery.Service.ShopifyApp
         public async Task<UserAccount> UserUpdate(string shop, Shop shopData, string accessToken)
         {
             // 查找包含当前商店的用户是否存在并更新其信息，若不存在则创建用户
-            var user = await _userRepo.GetQueryable().FirstOrDefaultAsync(u => u.ShopifyShopDomain == shop);
+            var user = await _userRepo.GetAsync(u => u.ShopifyShopDomain == shop);
 
             if (user == null)
             {
