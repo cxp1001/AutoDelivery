@@ -1,31 +1,21 @@
-using AutoDelivery.Core.Core;
-using AutoDelivery.Domain;
-using AutoDelivery.Domain.Mail;
-using AutoDelivery.Service.MailApp;
-using Humanizer;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using ShopifySharp;
 using AutoDelivery.Api.Extensions;
-using AutoDelivery.Core.Repository;
-using AutoDelivery.Domain.User;
-using AutoDelivery.Service.OrderApp;
 using AutoDelivery.Service.DeliveryApp;
+using AutoDelivery.Service.MailApp;
+using AutoDelivery.Service.OrderApp;
+using Microsoft.AspNetCore.Mvc;
+using ShopifySharp;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Text;
 
 namespace AutoDelivery.Api.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WebhookController : ControllerBase
+
+    public class DeliveryController : BaseController
     {
         private readonly IOrderService _orderService;
         private readonly IDeliveryService _deliveryService;
         private readonly IMailService _mailService;
 
-        public WebhookController(IOrderService orderService, IDeliveryService deliveryService, IMailService mailService)
+        public DeliveryController(IOrderService orderService, IDeliveryService deliveryService, IMailService mailService)
         {
             this._mailService = mailService;
             this._orderService = orderService;
@@ -38,7 +28,7 @@ namespace AutoDelivery.Api.Controllers
         /// </summary>
         /// <param name="shop"></param>
         /// <returns></returns>
-        [HttpPost("OrderPaid"),SwaggerOperation(Summary ="处理'orderspaid'Webhook")]
+        [HttpPost("OrderPaid"), SwaggerOperation(Summary = "处理'orderspaid'Webhook")]
         public async Task<IActionResult> HandleOrdersPaidWebhookAsync([FromQuery] string shop)
         {
             // 从HTTP的请求体中获取webhook数据
@@ -53,9 +43,14 @@ namespace AutoDelivery.Api.Controllers
             var mailContent = "aaa";
 
             // 拉取用户的邮箱配置
-            _mailService.SendActiveEmail("251088569@qq.com","Active Message",mailContent);
+            _mailService.SendActiveEmail("251088569@qq.com", "Active Message", mailContent);
 
             return Ok();
         }
+
+
+
+
+
     }
 }

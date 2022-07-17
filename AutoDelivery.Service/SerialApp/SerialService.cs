@@ -1,16 +1,15 @@
 using AutoDelivery.Core;
 using AutoDelivery.Core.Core;
+using AutoDelivery.Core.Extensions;
 using AutoDelivery.Core.Repository;
 using AutoDelivery.Domain;
-using AutoDelivery.Core.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using AutoDelivery.Domain.User;
-using Newtonsoft.Json;
 using AutoDelivery.Domain.Result;
+using AutoDelivery.Domain.User;
+using AutoDelivery.Service.AutoMapper;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using AutoDelivery.Service.AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace AutoDelivery.Service.SerialApp
 {
@@ -61,7 +60,7 @@ namespace AutoDelivery.Service.SerialApp
             var productIdsOfCurrentUser = currentUser.Products.Where(p => p != null).Select(p => p.Id);
 
             var serialsOfAllProducts = _productRepo.GetQueryable().AsNoTracking().Include(p => p.SerialsInventory).
-            Where(p => productIdsOfCurrentUser.Contains(p.Id) && p != null).Select(p => new SerialsInfoList { ProductId = p.Id, ProductName = p.ProductName, SerialInfo = p.SerialsInventory});
+            Where(p => productIdsOfCurrentUser.Contains(p.Id) && p != null).Select(p => new SerialsInfoList { ProductId = p.Id, ProductName = p.ProductName, SerialInfo = p.SerialsInventory });
 
             return serialsOfAllProducts;
 
@@ -132,7 +131,7 @@ namespace AutoDelivery.Service.SerialApp
 
             var productIdsOfCurrentUser = currentUser.Products.Where(p => p != null).Select(p => p.Id);
 
-            var serialsOfAllProducts = _productRepo.GetQueryable().AsNoTracking().Include(p => p.SerialsInventory).Where(p => productIdsOfCurrentUser.Contains(p.Id) ).Select(p => new SerialsInfoList { ProductId = p.Id, ProductName = p.ProductName, SerialInfo = p.SerialsInventory });
+            var serialsOfAllProducts = _productRepo.GetQueryable().AsNoTracking().Include(p => p.SerialsInventory).Where(p => productIdsOfCurrentUser.Contains(p.Id)).Select(p => new SerialsInfoList { ProductId = p.Id, ProductName = p.ProductName, SerialInfo = p.SerialsInventory });
 
             return serialsOfAllProducts.OrderBy(pageWithSortDto.Sort, (Convert.ToBoolean(pageWithSortDto.OrderType))).Skip(skip).Take(pageWithSortDto.PageSize);
 

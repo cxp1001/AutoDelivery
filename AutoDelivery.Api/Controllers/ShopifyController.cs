@@ -1,20 +1,16 @@
 using AutoDelivery.Api.Attributes;
-using AutoDelivery.Core.Core;
-using AutoDelivery.Core.Repository;
+using AutoDelivery.Api.Extensions;
+using AutoDelivery.Domain.Result;
 using AutoDelivery.Domain.Secrets;
+using AutoDelivery.Domain.Session;
 using AutoDelivery.Domain.Url;
 using AutoDelivery.Service.ShopifyApp;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ShopifySharp;
-using AutoDelivery.Domain.User;
-using AutoDelivery.Api.Extensions;
-using Swashbuckle.AspNetCore.Annotations;
-using AutoDelivery.Domain.Session;
-using Newtonsoft.Json;
-using AutoDelivery.Domain.Result;
-using ShopifySharp.Filters;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using ShopifySharp;
+using ShopifySharp.Filters;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace AutoDelivery.Api.Controllers
 {
@@ -191,7 +187,7 @@ namespace AutoDelivery.Api.Controllers
                 new ShopifyResult
                 {
                     ErrorMessage = "ok",
-                    Status = 6,
+                    Status = 7,
                     Time = DateTimeOffset.Now,
                     RedirectPath = "/home/index",
                     Data = $"ShopDomain = {shop}"

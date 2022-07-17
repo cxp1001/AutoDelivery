@@ -16,11 +16,11 @@ namespace AutoDelivery.Service.OrderApp
         {
             this._orderRepo = orderRepo;
             this._userRepo = userRepo;
-          
+
         }
 
 
-        public async Task<OrderDetail> SaveOrdersFromWebhookAsync(Order order,string shop)
+        public async Task<OrderDetail> SaveOrdersFromWebhookAsync(Order order, string shop)
         {
             // 将body中的信息拉取出来
             var itemQuantities = order.LineItems.Where(l => l.Quantity != null).Select(l => l.Quantity).Sum();
@@ -33,8 +33,8 @@ namespace AutoDelivery.Service.OrderApp
             var orderDetails = order.LineItems.Select(l => (Product: l.Title, Quantity: l.Quantity)).ToList();
             // var orderDetails = order.LineItems.Select(l => (product: l.Title, sku: l.SKU, quantity: l.Quantity)).ToLookup(o => o.product,o=>o.sku,o =>o.quantity).ToDictionary(l=>l.Key,l=>l.First());;
             var orderDetailsJson = JsonConvert.SerializeObject(orderDetails);
-            var user = await _userRepo.GetQueryable().Include(u=>u.OrderDetails).SingleAsync(u => u.ShopifyShopDomain == shop);
-           
+            var user = await _userRepo.GetQueryable().Include(u => u.OrderDetails).SingleAsync(u => u.ShopifyShopDomain == shop);
+
             OrderDetail newOrderDetail = new()
             {
                 OrderId = orderId,
@@ -61,7 +61,7 @@ namespace AutoDelivery.Service.OrderApp
         // }
 
 
- 
+
 
 
 

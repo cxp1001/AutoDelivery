@@ -1,11 +1,8 @@
 using AutoDelivery.Core;
-using AutoDelivery.Domain;
 using AutoDelivery.Domain.Result;
 using AutoDelivery.Service.SerialApp;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using AutoDelivery.Api.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace AutoDelivery.Api.Controllers
@@ -27,7 +24,7 @@ namespace AutoDelivery.Api.Controllers
         /// <returns></returns>
         [SwaggerOperation(Summary = "获取当前用户的所有产品和对应的序列号集合")]
         [HttpGet("GetAllSerials")]
-        public async Task<string> GetAllSerialsAsync(int pageIndex = 1,
+        public async Task<ActionResult<Result>> GetAllSerialsAsync(int pageIndex = 1,
             int pageSize = 20,
             string sort = "ProductName",
             OrderType orderType = OrderType.Asc, int userId = 4)
@@ -48,12 +45,12 @@ namespace AutoDelivery.Api.Controllers
             var totalSerials = await _serialService.CountAllProductsOfCurrentUserAsync(userId);
             var resultCount = listofSerials.SelectMany(l => l.SerialInfo).Count();
 
-            string resString;
+            Result resString;
 
             // 当前用户未添加任何产品
             if (!listofSerials.Any())
             {
-                resString = JsonConvert.SerializeObject(
+                resString =
                      new Result()
                      {
                          ErrorMessage = "none product",
@@ -61,15 +58,19 @@ namespace AutoDelivery.Api.Controllers
                          Time = DateTimeOffset.Now,
                          Data = null,
                          ResultCount = 0
-                     }, setting
-                 );
+                     };
+                return new JsonResult(resString, setting)
+                {
+                    StatusCode = 404
+                };
+
             }
             else
             {
                 // 当前用户已添加的所有产品都没有配置序列号信息
                 if (!listofSerials.SelectMany(l => l.SerialInfo).Any())
                 {
-                    resString = JsonConvert.SerializeObject(
+                    resString =
                     new Result()
                     {
                         ErrorMessage = "none serial info of all existed products",
@@ -78,15 +79,17 @@ namespace AutoDelivery.Api.Controllers
                         Data = listofSerials,
                         ResultCount = resultCount,
                         TotalCount = totalSerials
-
-                    }, setting
-                );
+                    };
+                    return new JsonResult(resString, setting)
+                    {
+                        StatusCode = 404
+                    };
                 }
 
                 // 返回当前用户已添加的产品及对应的序列号信息
                 else
                 {
-                    resString = JsonConvert.SerializeObject(
+                    resString =
                         new Result()
                         {
                             ErrorMessage = "Successfully obtained all serial numbers of current user",
@@ -95,12 +98,16 @@ namespace AutoDelivery.Api.Controllers
                             Data = listofSerials,
                             ResultCount = resultCount,
                             TotalCount = totalSerials
-                        }, setting
-                    );
+                        };
+                    return new JsonResult(resString, setting)
+                    {
+                        StatusCode = 200
+                    };
                 }
 
             }
-            return resString;
+
+
         }
 
 
@@ -120,7 +127,7 @@ namespace AutoDelivery.Api.Controllers
         /// <returns></returns>
         [HttpGet("GetSerials")]
         [SwaggerOperation(Summary = "根据用户输入的信息模糊查找满足条件的序列号")]
-        public async Task<string> GetSerialsAsync(string productName,
+        public async Task<ActionResult<Result>> GetSerialsAsync(string productName,
             string? serialNumber,
             string? activeKey,
             string? subActiveKey,
@@ -149,11 +156,11 @@ namespace AutoDelivery.Api.Controllers
 
             var totalSerials = await _serialService.CountSerialsAsync(userId, productName, serialNumber, activeKey, subActiveKey, activeLink, used);
 
-            string resString;
+            Result result;
             // 查询结果为空
             if (!serials.Any())
             {
-                resString = JsonConvert.SerializeObject(
+                result =
                    new Result()
                    {
                        ErrorMessage = "none serial info of all existed products",
@@ -161,12 +168,15 @@ namespace AutoDelivery.Api.Controllers
                        Time = DateTimeOffset.Now,
                        Data = null,
                        ResultCount = 0
-                   }, setting
-                );
+                   };
+                return new JsonResult(result, setting)
+                {
+                    StatusCode = 404
+                };
             }
             else
             {
-                resString = JsonConvert.SerializeObject(
+                result =
                   new Result()
                   {
                       ErrorMessage = "search of serials successful",
@@ -175,11 +185,13 @@ namespace AutoDelivery.Api.Controllers
                       Data = serials,
                       ResultCount = serials.Count(),
                       TotalCount = totalSerials
-                  }, setting
-                );
+                  };
+                return new JsonResult(result, setting)
+                {
+                    StatusCode = 404
+                };
             }
 
-            return resString;
         }
 
 

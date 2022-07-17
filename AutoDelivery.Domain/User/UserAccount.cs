@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoDelivery.Domain;
 using AutoDelivery.Domain.Mail;
 
 namespace AutoDelivery.Domain.User
@@ -23,7 +18,7 @@ namespace AutoDelivery.Domain.User
         public MailConfig? Mailconfiguration { get; set; }
         // 商户的产品信息
         public List<Product> Products { get; set; }
-        
+
 
 
     }

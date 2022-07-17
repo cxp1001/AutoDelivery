@@ -1,13 +1,8 @@
-using System.Security.Cryptography.X509Certificates;
 using AutoDelivery.Core;
-using AutoDelivery.Domain;
 using AutoDelivery.Domain.Result;
 using AutoDelivery.Service.ProductApp;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using AutoDelivery.Api.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace AutoDelivery.Api.Controllers
@@ -208,11 +203,11 @@ namespace AutoDelivery.Api.Controllers
             bool? hasActiveLink,
             bool? hasSerialNum,
             bool IsAvailable,
-            int userId=4)
+            int userId = 4)
         {
             // 获取用户的Id
             // var userId = HttpContext.GetCurrentUserId();
-           
+
 
             var updatedProduct = await _productService.EditProductAsync(userId, id, productName, maker, mainName, subName, productEdition, productVersion, productCommonName, productSku, productDetails, productCategory, categoryId,
             hasActiveKey, hasSubActiveKey, hasActiveLink, hasSerialNum, IsAvailable);
@@ -243,45 +238,57 @@ namespace AutoDelivery.Api.Controllers
 
 
         [HttpDelete]
-        [SwaggerOperation(Summary = "删除产品")]
-        public async Task<ActionResult> DeleteProductAsync(int userId,int id)
+        [SwaggerOperation(Summary = "删除产品以及包含序列号信息在内的所有相关信息")]
+        public async Task<ActionResult<Result>> DeleteProductAsync(int userId, int id)
         {
 
             // 获取用户的Id
             // var userId = HttpContext.GetCurrentUserId();
-           
+
 
             var deletedProduct = await _productService.DeleteProductAsync(userId, id);
 
             if (deletedProduct != null)
             {
-                var goodResString = JsonConvert.SerializeObject(new Result
+                // var goodResString = JsonConvert.SerializeObject(new Result
+                // {
+                //     Status = 9,
+                //     ErrorMessage = $"Product {deletedProduct.ProductName}'s information deleted successfully",
+                //     Time = DateTimeOffset.Now
+                // }, setting);
+
+                var goodResString = new Result
                 {
                     Status = 9,
                     ErrorMessage = $"Product {deletedProduct.ProductName}'s information deleted successfully",
                     Time = DateTimeOffset.Now
-                }, setting);
+                };
 
-                return Ok(goodResString);
+                return new JsonResult(goodResString) { StatusCode = 200 };
 
             }
             else
             {
-                var badResString = JsonConvert.SerializeObject(new Result
+                // var badResString = JsonConvert.SerializeObject(new Result
+                // {
+                //     Status = 10,
+                //     ErrorMessage = $"The delete of the product was unsuccessful",
+                //     Time = DateTimeOffset.Now
+                // }, setting);
+
+                var badResString = new Result
                 {
                     Status = 10,
                     ErrorMessage = $"The delete of the product was unsuccessful",
                     Time = DateTimeOffset.Now
-                }, setting);
+                };
 
-                return Ok(badResString);
+                return new JsonResult(badResString, setting) { StatusCode = 204 };
+
+                //return Ok(badResString);
             }
 
-
         }
-
-
-
 
     }
 

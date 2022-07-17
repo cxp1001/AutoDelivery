@@ -5,7 +5,7 @@ using ShopifySharp;
 
 namespace AutoDelivery.Api.Attributes
 {
-    public class ValidateShopifyRequestAttribute:ActionFilterAttribute
+    public class ValidateShopifyRequestAttribute : ActionFilterAttribute
     {
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {

@@ -1,13 +1,11 @@
 using AutoDelivery.Core;
+using AutoDelivery.Core.Core;
+using AutoDelivery.Core.Extensions;
 using AutoDelivery.Core.Repository;
 using AutoDelivery.Domain;
-using Microsoft.EntityFrameworkCore;
 using AutoDelivery.Domain.User;
-using AutoDelivery.Core.Extensions;
-using AutoDelivery.Core.Core;
-using System.Collections;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
 
 namespace AutoDelivery.Service.UserApp
 {
@@ -99,21 +97,17 @@ namespace AutoDelivery.Service.UserApp
         ///  获取当前用户设置的所有产品分类信息
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="pageWithSortDto"></param>
         /// <returns></returns>
 
-        public async Task<List<ProductCategory>> GetProductCategoriesAsync(int userId, PageWithSortDto pageWithSortDto)
+        public async Task<List<ProductCategory>> GetProductCategoriesAsync(int userId)
         {
-            pageWithSortDto.Sort ??= "Category";
-
-            var skip = (pageWithSortDto.PageIndex - 1) * pageWithSortDto.PageSize;
 
             var user = await _userRepo.GetQueryable().Include(u => u.Products).AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
             var userProductsId = user.Products.Select(p => p.Id);
             var product = _productRepo.GetQueryable().Include(p => p.ProductCategory).Where(p => p.ProductCategory != null).AsNoTracking();
             var categories = product.Where(p => userProductsId.Contains(p.Id)).Select(p => p.ProductCategory);
 
-            return categories.Distinct().OrderBy(pageWithSortDto.Sort, (Convert.ToBoolean(pageWithSortDto.OrderType))).Skip(skip).Take(pageWithSortDto.PageSize).ToList();
+            return categories.Distinct().OrderBy("Category").ToList();
 
 
         }

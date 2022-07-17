@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace AutoDelivery.Domain
+﻿namespace AutoDelivery.Domain
 {
     // 产品信息
-    public partial class Product:BaseModel
+    public partial class Product : BaseModel
     {
-  
+
         public string ProductName { get; set; } = null!;
         public string? Maker { get; set; } = null!;
         public string? MainName { get; set; } = null!;
         public string? SubName { get; set; }
         public DateTimeOffset CreatedTime { get; set; }
-        public DateTimeOffset? EditTime { get; set; } 
+        public DateTimeOffset? EditTime { get; set; }
         public string? ProductEdition { get; set; } = null!;
         public string? ProductVersion { get; set; } = null!;
         public string? ProductCommonName { get; set; } = null!;
@@ -27,6 +22,6 @@ namespace AutoDelivery.Domain
         public bool IsAvailable { get; set; } = false!;
         public List<Serial>? SerialsInventory { get; set; }
         public ProductCategory? ProductCategory { get; set; }
-
+        public MailContent? MailContent { get; set; }
     }
 }

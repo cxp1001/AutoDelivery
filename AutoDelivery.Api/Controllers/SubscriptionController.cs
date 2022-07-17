@@ -1,4 +1,3 @@
-using System.Net;
 using AutoDelivery.Api.Attributes;
 using AutoDelivery.Api.Extensions;
 using AutoDelivery.Domain.Result;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ShopifySharp;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace AutoDelivery.Api.Controllers
 {
@@ -126,7 +126,7 @@ namespace AutoDelivery.Api.Controllers
 
 
         // 用户提交确认订阅的表单后，生成新的订阅付款信息并跳转到Shopify进行订阅
-        [HttpPost]
+        [HttpPost("HandleStartSubscription")]
         public async Task<string> HandleStartSubscription()
         {
             // 确定用户还没有订阅，避免多次付费

@@ -1,14 +1,9 @@
 ﻿using AutoDelivery.Domain.Secrets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace AutoDelivery.Domain.Url
 {
-    public class ApplicationUrls:IApplicationUrls
+    public class ApplicationUrls : IApplicationUrls
     {
         public string OAuthRedirectUrl { get; }
         public string SubscriptionRedirectUrl { get; }

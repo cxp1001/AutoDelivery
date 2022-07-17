@@ -1,15 +1,10 @@
 using AutoDelivery.Core.Core;
 using AutoDelivery.Core.Repository;
-using AutoDelivery.Domain.Result;
 using AutoDelivery.Domain.Secrets;
 using AutoDelivery.Domain.Session;
 using AutoDelivery.Domain.Url;
 using AutoDelivery.Domain.User;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using ShopifySharp;
 
 namespace AutoDelivery.Service.ShopifyApp
@@ -53,7 +48,7 @@ namespace AutoDelivery.Service.ShopifyApp
         public async Task<OAuthState> CheckTokenAsync(string state)
         {
             var dbToken = await _stateRepo.GetAsync(l => l.Token == state);
-      
+
             return dbToken;
 
         }

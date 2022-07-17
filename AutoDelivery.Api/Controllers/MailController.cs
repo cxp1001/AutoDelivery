@@ -12,10 +12,10 @@ namespace AutoDelivery.Api.Controllers
             this._mailService = mailService;
         }
 
-       [HttpPost]
-        public  bool SendMailAsync( string mailTo, string mailTitle, string mailContent)
+        [HttpPost]
+        public bool SendMailAsync(string mailTo, string mailTitle, string mailContent)
         {
-            return  _mailService.SendActiveEmail( mailTo, mailTitle, mailContent);
+            return _mailService.SendActiveEmail(mailTo, mailTitle, mailContent);
         }
     }
 }

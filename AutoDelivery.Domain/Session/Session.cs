@@ -10,7 +10,7 @@ namespace AutoDelivery.Domain.Session
 
         public Session()
         {
-            
+
         }
 
         public Session(UserAccount user)
@@ -19,11 +19,11 @@ namespace AutoDelivery.Domain.Session
             ShopifyShopDomain = user.ShopifyShopDomain;
             IsSubscribed = user.ShopifyChargeId.HasValue;
         }
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
     }
 }

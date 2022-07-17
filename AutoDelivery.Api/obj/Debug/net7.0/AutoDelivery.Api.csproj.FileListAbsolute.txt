@@ -86,3 +86,8 @@ d:\zzzzz\AutoDelivery\AutoDelivery.Api\obj\Debug\net7.0\AutoDelivery.Api.genrunt
 d:\zzzzz\AutoDelivery\AutoDelivery.Api\obj\Debug\net7.0\ref\AutoDelivery.Api.dll
 D:\zzzzz\AutoDelivery\AutoDelivery.Api\bin\Debug\net7.0\AutoMapper.dll
 D:\zzzzz\AutoDelivery\AutoDelivery.Api\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Api\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Api\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Api\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
+D:\zzzzz\AutoDelivery\AutoDelivery.Api\bin\Debug\net7.0\AutoDelivery.Api.xml
+D:\zzzzz\AutoDelivery\AutoDelivery.Api\obj\Debug\net7.0\AutoDelivery.Api.xml

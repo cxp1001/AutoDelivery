@@ -1,5 +1,4 @@
 using AutoDelivery.Core.Extensions;
-using AutoDelivery.Domain;
 using AutoDelivery.Domain.Session;
 using AutoDelivery.Domain.User;
 

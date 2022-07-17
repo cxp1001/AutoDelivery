@@ -49,6 +49,7 @@ builder.Services.AddAutoMapper(typeof(MapperProfile));
 var mapperConfig = new MapperConfiguration(cfg => { });
 mapperConfig.CompileMappings();
 
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(

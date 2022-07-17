@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AutoDelivery.Api</name>
+    </assembly>
+    <members>
+        <member name="M:AutoDelivery.Api.Controllers.DeliveryController.HandleOrdersPaidWebhookAsync(System.String)">
+            <summary>
+            处理 orders_paid Webhook
+            </summary>
+            <param name="shop"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AutoDelivery.Api.Controllers.ProductController.GetProductsAsync(System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,AutoDelivery.Core.OrderType,System.Int32)">
+            <summary>
+            搜索产品
+            </summary>
+            <param name="productCategory"></param>
+            <param name="productName"></param>
+            <param name="productSku"></param>
+            <param name="maker"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <param name="sort"></param>
+            <param name="orderType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AutoDelivery.Api.Controllers.ProductController.AddProductAsync(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Boolean,System.Int32)">
+            <summary>
+            用户添加产品
+            </summary>
+            <param name="productName"></param>
+            <param name="maker"></param>
+            <param name="mainName"></param>
+            <param name="subName"></param>
+            <param name="productEdition"></param>
+            <param name="productVersion"></param>
+            <param name="productCommonName"></param>
+            <param name="productSku"></param>
+            <param name="productDetails"></param>
+            <param name="productCategory"></param>
+            <param name="hasActiveKey"></param>
+            <param name="hasSubActiveKey"></param>
+            <param name="hasActiveLink"></param>
+            <param name="hasSerialNum"></param>
+            <param name="isAvailable"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AutoDelivery.Api.Controllers.ProductController.UpdateProductAsync(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Boolean,System.Int32)">
+            <summary>
+            更新产品信息
+            </summary>
+            <param name="id"></param>
+            <param name="productName"></param>
+            <param name="maker"></param>
+            <param name="mainName"></param>
+            <param name="subName"></param>
+            <param name="productEdition"></param>
+            <param name="productVersion"></param>
+            <param name="productCommonName"></param>
+            <param name="productSku"></param>
+            <param name="productDetails"></param>
+            <param name="productCategory"></param>
+            <param name="categoryId"></param>
+            <param name="hasActiveKey"></param>
+            <param name="hasSubActiveKey"></param>
+            <param name="hasActiveLink"></param>
+            <param name="hasSerialNum"></param>
+            <param name="IsAvailable"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AutoDelivery.Api.Controllers.SerialController.GetAllSerialsAsync(System.Int32,System.Int32,System.String,AutoDelivery.Core.OrderType,System.Int32)">
+            <summary>
+            获取当前用户的所有产品和对应的序列号集合并排序和分页
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AutoDelivery.Api.Controllers.SerialController.GetSerialsAsync(System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.String,AutoDelivery.Core.OrderType,System.Int32)">
+            <summary>
+            根据用户输入的信息模糊查找满足条件的序列号
+            </summary>
+            <param name="productName"></param>
+            <param name="serialNumber"></param>
+            <param name="activeKey"></param>
+            <param name="subActiveKey"></param>
+            <param name="activeLink"></param>
+            <param name="used"></param>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <param name="sort"></param>
+            <param name="orderType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AutoDelivery.Api.Controllers.SerialController.AddNewSerialAsync(System.Int32,System.String,System.String,System.String,System.String,System.Boolean,System.Int32)">
+            <summary>
+            添加序列号
+            </summary>
+            <param name="productId">通过用户在下拉列表中选择的产品来获取当前产品的Id</param>
+            <param name="serialNumber"></param>
+            <param name="activeKey"></param>
+            <param name="subActiveKey"></param>
+            <param name="activeLink"></param>
+            <param name="used"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AutoDelivery.Api.Controllers.SerialController.UpdateSerialAsync(System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.Int32)">
+            <summary>
+            编辑序列号信息
+            </summary>
+            <param name="productId"></param>
+            <param name="serialId"></param>
+            <param name="serialNumber"></param>
+            <param name="activeKey"></param>
+            <param name="subActiveKey"></param>
+            <param name="activeLink"></param>
+            <param name="used"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AutoDelivery.Api.Controllers.SerialController.DeleteSerialAsync(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            删除序列号
+            </summary>
+            <param name="productId"></param>
+            <param name="serialId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AutoDelivery.Api.Controllers.UserController.GetCategoriesAsync(System.Int32,System.Int32,System.Int32,System.String,AutoDelivery.Core.OrderType)">
+            <summary>
+            获取当前用户设置的所有产品分类
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AutoDelivery.Api.Extensions.HttpContextExtensions.GetCurrentUserId(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取用户的Id
+            </summary>
+            <param name="httpContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AutoDelivery.Api.Extensions.HttpRequestExtensions.ReadRawBodyAsync(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Reads the request stream into a string, while simultaneously ensuring request handlers 
+            further down the pipeline can still use the request stream without it being disposed or stuck at 
+            the end.
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

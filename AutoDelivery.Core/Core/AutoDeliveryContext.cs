@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AutoDelivery.Core.Extensions;
 using AutoDelivery.Domain;
 using AutoDelivery.Domain.Mail;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using AutoDelivery.Domain.User;
-using AutoDelivery.Core.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace AutoDelivery.Core.Core
 {
@@ -15,10 +12,11 @@ namespace AutoDelivery.Core.Core
         public DbSet<UserAccount> Users { get; set; }
         public DbSet<OAuthState> LoginStates { get; set; }
         public DbSet<MailConfig> MailConfigs { get; set; }
-        public  DbSet<OrderDetail> Orders { get; set; } = null!;
-        public  DbSet<Product> Products { get; set; } = null!;
-        public  DbSet<Serial> Serials { get; set; } = null!;
+        public DbSet<OrderDetail> Orders { get; set; } = null!;
+        public DbSet<Product> Products { get; set; } = null!;
+        public DbSet<Serial> Serials { get; set; } = null!;
         public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<MailContent> MailContents { get; set; }
 
         public AutoDeliveryContext()
         {
@@ -46,13 +44,14 @@ namespace AutoDelivery.Core.Core
             modelBuilder.Entity<UserAccount>().HasMany(u => u.OrderDetails);
             modelBuilder.Entity<UserAccount>().HasMany(u => u.Products);
             modelBuilder.Entity<UserAccount>().HasOne(u => u.Mailconfiguration);
-            modelBuilder.Entity<Product>().HasMany(p=>p.SerialsInventory);
-            modelBuilder.Entity<Product>().HasOne(p=>p.ProductCategory);
-            modelBuilder.Entity<OrderDetail>().HasMany(o=>o.RelatedSerials);
+            modelBuilder.Entity<Product>().HasMany(p => p.SerialsInventory);
+            modelBuilder.Entity<Product>().HasOne(p => p.ProductCategory);
+            modelBuilder.Entity<OrderDetail>().HasMany(o => o.RelatedSerials);
             modelBuilder.Entity<Serial>().Property(s => s.RowVersion).IsRowVersion();
+
 
         }
 
-       
+
     }
 }

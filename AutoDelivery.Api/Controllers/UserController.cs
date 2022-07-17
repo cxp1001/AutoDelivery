@@ -1,12 +1,10 @@
-using System.Collections;
 using AutoDelivery.Core;
-using AutoDelivery.Domain;
 using AutoDelivery.Domain.Result;
 using AutoDelivery.Service.UserApp;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using AutoDelivery.Api.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections;
 
 namespace AutoDelivery.Api.Controllers
 {
@@ -25,13 +23,13 @@ namespace AutoDelivery.Api.Controllers
         // 获取当前用户的所有产品
         [SwaggerOperation(Summary = "拉取当前用户的所有产品")]
         [HttpGet("GetAllProducts")]
-        public async Task<IEnumerable> GetAllProductsAsync(int userId=4,int pageIndex = 1,
+        public async Task<IEnumerable> GetAllProductsAsync(int userId = 4, int pageIndex = 1,
           int pageSize = 20,
           string sort = "ProductName",
           OrderType orderType = OrderType.Asc)
         {
             //var userId = HttpContext.GetCurrentUserId();
-         
+
             var res = await _userService.GetAllProductsAsync(userId, new PageWithSortDto
             {
                 PageIndex = pageIndex,
@@ -71,22 +69,16 @@ namespace AutoDelivery.Api.Controllers
         /// <returns></returns>
         [SwaggerOperation(Summary = "拉取当前用户设置的所有产品分类信息")]
         [HttpGet("GetCategories")]
-        public async Task<string> GetCategoriesAsync(int userId=4,int pageIndex = 1,
+        public async Task<string> GetCategoriesAsync(int userId = 4, int pageIndex = 1,
           int pageSize = 20,
-          string sort = "ProductName",
+          string sort = "Category",
           OrderType orderType = OrderType.Asc)
         {
             //var userId = HttpContext.GetCurrentUserId();
-     
 
 
-            var categoies = await _userService.GetProductCategoriesAsync(userId, new PageWithSortDto
-            {
-                PageIndex = pageIndex,
-                PageSize = pageSize,
-                Sort = sort,
-                OrderType = orderType
-            });
+
+            var categoies = await _userService.GetProductCategoriesAsync(userId);
 
             var totalCategories = await _userService.CountCategories(userId);
 

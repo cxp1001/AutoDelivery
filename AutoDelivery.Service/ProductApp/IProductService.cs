@@ -12,5 +12,5 @@ namespace AutoDelivery.Service.ProductApp
         Task<Product> DeleteProductAsync(int userId, int id);
         Task<Product> EditProductAsync(int userId, int id, string? name, string? maker, string? mainName, string? subName, string? edition, string? version, string? commonName, string? sku, string? detail, string? category, int? categoryId, bool? hasActiveKey, bool? hasSubActiveKey, bool? hasActiveLink, bool? hasSerialNum, bool IsAvailable);
         Task<IEnumerable<Product>> GetProductDtoAsync(int userId, string? productCategory, string? productName, string? productSku, string? maker, PageWithSortDto pageWithSortDto);
-      }
+    }
 }

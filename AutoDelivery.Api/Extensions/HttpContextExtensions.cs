@@ -1,8 +1,8 @@
-using System.Security.Claims;
 using AutoDelivery.Domain.Session;
+using AutoDelivery.Domain.User;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using AutoDelivery.Domain.User;
+using System.Security.Claims;
 
 namespace AutoDelivery.Api.Extensions
 {

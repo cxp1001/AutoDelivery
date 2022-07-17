@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace AutoDelivery.Domain
+﻿namespace AutoDelivery.Domain
 {
-    public partial class Serial:BaseModel
+    public partial class Serial : BaseModel
     {
         // 商品名
         public string ProductName { get; set; } = null!;
@@ -24,6 +21,6 @@ namespace AutoDelivery.Domain
         // 使い済み
         public bool Used { get; set; } = false;
         public byte[] RowVersion { get; set; }
-        
+
     }
 }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ShopifySharp.Infrastructure;
 
@@ -60,7 +56,7 @@ namespace AutoDelivery.Api.Extensions
             }
 
             return JsonConvert.DeserializeObject<T>(await request.ReadRawBodyAsync(), serializerSettings);
-            
+
         }
 
     }

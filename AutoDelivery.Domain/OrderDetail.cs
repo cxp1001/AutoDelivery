@@ -1,6 +1,6 @@
 ﻿namespace AutoDelivery.Domain
 {
-    public  class OrderDetail : BaseModel
+    public class OrderDetail : BaseModel
     {
         // 订单Id
         public long? OrderId { get; set; }

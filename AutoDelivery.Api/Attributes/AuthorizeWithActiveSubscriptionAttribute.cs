@@ -1,7 +1,8 @@
+using AutoDelivery.Api.Extensions;
+using AutoDelivery.Domain.Result;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using AutoDelivery.Api.Extensions;
 
 namespace AutoDelivery.Api.Attributes
 {
@@ -9,9 +10,9 @@ namespace AutoDelivery.Api.Attributes
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-           // 用户是否已完成鉴权
-           if (!context.HttpContext.User.Identity.IsAuthenticated)
-           {
+            // 用户是否已完成鉴权
+            if (!context.HttpContext.User.Identity.IsAuthenticated)
+            {
                 return;
             }
 
@@ -20,7 +21,11 @@ namespace AutoDelivery.Api.Attributes
             if (!session.IsSubscribed)
             {
                 // 将用户跳转到/subscription/start ，开始订阅流程
-                context.Result = new RedirectToPageResult("/subscription/start");
+                var res = new ShopifyResult()
+                {
+                    RedirectPath = "/subscription/start",
+                };
+                context.Result = new JsonResult(res) { StatusCode = 403 };
             }
         }
     }

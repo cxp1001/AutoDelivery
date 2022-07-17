@@ -48,7 +48,28 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MailConfigs", (string)null);
+                    b.ToTable("MailConfigs");
+                });
+
+            modelBuilder.Entity("AutoDelivery.Domain.MailContent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("MailTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MainContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MailContents");
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.OrderDetail", b =>
@@ -91,7 +112,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasIndex("UserAccountId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.Product", b =>
@@ -122,6 +143,9 @@ namespace AutoDelivery.Core.Migrations
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("MailContentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("MainName")
                         .HasColumnType("nvarchar(max)");
@@ -159,11 +183,13 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MailContentId");
+
                     b.HasIndex("ProductCategoryId");
 
                     b.HasIndex("UserAccountId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.ProductCategory", b =>
@@ -180,7 +206,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategories", (string)null);
+                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.Serial", b =>
@@ -238,7 +264,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Serials", (string)null);
+                    b.ToTable("Serials");
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.User.OAuthState", b =>
@@ -262,7 +288,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LoginStates", (string)null);
+                    b.ToTable("LoginStates");
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.User.UserAccount", b =>
@@ -297,7 +323,7 @@ namespace AutoDelivery.Core.Migrations
 
                     b.HasIndex("MailconfigurationId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("AutoDelivery.Domain.OrderDetail", b =>
@@ -309,6 +335,10 @@ namespace AutoDelivery.Core.Migrations
 
             modelBuilder.Entity("AutoDelivery.Domain.Product", b =>
                 {
+                    b.HasOne("AutoDelivery.Domain.MailContent", "MailContent")
+                        .WithMany()
+                        .HasForeignKey("MailContentId");
+
                     b.HasOne("AutoDelivery.Domain.ProductCategory", "ProductCategory")
                         .WithMany()
                         .HasForeignKey("ProductCategoryId");
@@ -316,6 +346,8 @@ namespace AutoDelivery.Core.Migrations
                     b.HasOne("AutoDelivery.Domain.User.UserAccount", null)
                         .WithMany("Products")
                         .HasForeignKey("UserAccountId");
+
+                    b.Navigation("MailContent");
 
                     b.Navigation("ProductCategory");
                 });

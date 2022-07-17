@@ -1,12 +1,11 @@
 using AutoDelivery.Core;
 using AutoDelivery.Core.Core;
+using AutoDelivery.Core.Extensions;
 using AutoDelivery.Core.Repository;
 using AutoDelivery.Domain;
-using AutoDelivery.Core.Extensions;
-using Microsoft.EntityFrameworkCore;
 using AutoDelivery.Domain.User;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Security.Authentication;
 
 namespace AutoDelivery.Service.ProductApp
 {
@@ -112,7 +111,7 @@ namespace AutoDelivery.Service.ProductApp
                 ((!string.IsNullOrWhiteSpace(maker) && !string.IsNullOrWhiteSpace(p.Maker) && p.Maker.ToLower().Contains(maker.ToLower())) || string.IsNullOrWhiteSpace(maker))).Include(p => p.ProductCategory)
                .AsNoTracking();
 
-            var resultProducts = allProducts.Where(p => uPId.Contains(p.Id)).OrderBy(pageWithSortDto.Sort,(Convert.ToBoolean(pageWithSortDto.OrderType))).Skip(skip).Take(pageWithSortDto.PageSize);
+            var resultProducts = allProducts.Where(p => uPId.Contains(p.Id)).OrderBy(pageWithSortDto.Sort, (Convert.ToBoolean(pageWithSortDto.OrderType))).Skip(skip).Take(pageWithSortDto.PageSize);
             return await resultProducts.ToListAsync();
 
         }
@@ -244,7 +243,7 @@ namespace AutoDelivery.Service.ProductApp
 
 
         public async Task<Product> EditProductAsync(int userId,
-            int id,
+            int productId,
             string? name,
             string? maker,
             string? mainName,
@@ -263,7 +262,8 @@ namespace AutoDelivery.Service.ProductApp
             bool IsAvailable
         )
         {
-            var targetProduct = await _productRepo.GetQueryable().FirstOrDefaultAsync(p => p.Id == id);
+            var targetProduct = await _productRepo.GetAsync(p => p.Id == productId);
+
             if (targetProduct == null)
             {
                 throw new NullReferenceException(
@@ -329,6 +329,7 @@ namespace AutoDelivery.Service.ProductApp
             }
 
 
+
             targetProduct.HasActiveKey = hasActiveKey ?? targetProduct.HasActiveKey;
             targetProduct.HasSubActiveKey = hasSubActiveKey ?? targetProduct.HasSubActiveKey;
             targetProduct.HasActiveLink = hasActiveLink ?? targetProduct.HasActiveLink;
@@ -345,7 +346,7 @@ namespace AutoDelivery.Service.ProductApp
 
         public async Task<Product> DeleteProductAsync(int userId, int id)
         {
-            var targetProduct = await _productRepo.GetQueryable().FirstOrDefaultAsync(p => p.Id == id);
+            var targetProduct = await _productRepo.GetQueryable().Where(p => p.Id == id).Include(p => p.SerialsInventory).FirstOrDefaultAsync();
             if (targetProduct == null)
             {
                 throw new NullReferenceException(
@@ -386,6 +387,8 @@ namespace AutoDelivery.Service.ProductApp
                     }));
             }
 
+            targetProduct.SerialsInventory = null;
+            await _productRepo.UpdateAsync(targetProduct);
             return await _productRepo.DeleteAsync(targetProduct);
 
         }

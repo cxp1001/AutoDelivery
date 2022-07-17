@@ -1,4 +1,3 @@
-using System.Text.Json;
 using AutoDelivery.Core.Core;
 using AutoDelivery.Domain.Result;
 using AutoDelivery.Domain.Secrets;
@@ -62,7 +61,8 @@ namespace AutoDelivery.Api.Controllers
            );
         }
 
-        [HttpPost]
+        [HttpPost("HandleLogin")]
+        [SwaggerOperation(Summary = "用户输入商店域名进行登录")]
         public async Task<string> HandleLogin(string shop)
         {
             // 验证用户输入的shop是一个真实的Shopify店铺
@@ -97,15 +97,15 @@ namespace AutoDelivery.Api.Controllers
                 newState.Token
             );
 
-             return JsonConvert.SerializeObject(
-                new ShopifyResult
-                {
-                    ErrorMessage = "redirect to OAuthURL",
-                    Status = 10,
-                    Time = DateTimeOffset.Now,
-                    RedirectPath = oAuthUrl.ToString()
-                }, setting
-           );
+            return JsonConvert.SerializeObject(
+               new ShopifyResult
+               {
+                   ErrorMessage = "redirect to OAuthURL",
+                   Status = 10,
+                   Time = DateTimeOffset.Now,
+                   RedirectPath = oAuthUrl.ToString()
+               }, setting
+          );
 
         }
 

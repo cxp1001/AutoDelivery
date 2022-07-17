@@ -28,40 +28,42 @@ namespace AutoDelivery.Service.DeliveryApp
             var orderId = order.Id;
 
             var validOrders = itemInfos.Where(o => o.Quantity != 0);
-            var currentOrder = await  _orderRepo.GetQueryable().Include(o => o.RelatedSerials).SingleAsync(o => o.OrderId == orderId);
+            var currentOrder = await _orderRepo.GetQueryable().Include(o => o.RelatedSerials).SingleAsync(o => o.OrderId == orderId);
 
             List<(string Product, List<Serial> serial)> serialList = new();
+            List<Serial> serialsToShip = new();
 
 
             foreach (var validOrder in validOrders)
             {
                 var serials = _serialRepo.GetQueryable().Where(s => s.ProductName == validOrder.Product && s.Used == false).OrderBy(s => s.Id).Take((int)validOrder.Quantity);
 
-                foreach (var serial in serials)
-                {
-                    serial.Used = true;
-                    serial.ShippedTime = DateTimeOffset.Now;
-                }
+                // 需要发送的序列号，放在list中等待更改状态
+                // foreach (var serial in serials)
+                // {
+                //     serialsToShip.Add(serial);
+                // }
 
-               
+
                 currentOrder.RelatedSerials.AddRange(serials);
 
                 serialList.Add((validOrder.Product, serials.ToList()));
                 await _dbContext.SaveChangesAsync();
             }
 
-           
+
             return serialList;
-
-
         }
 
 
 
-        public async Task BuildMailContent(List<(string,List<Serial>)> serials)
-        {
-            
-        }
+
+
+
+
+
+
+
 
 
 

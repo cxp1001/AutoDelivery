@@ -1,8 +1,8 @@
 using AutoDelivery.Core.Core;
-using System.Linq.Expressions;
 using AutoDelivery.Core.Extensions;
-using Microsoft.EntityFrameworkCore;
 using AutoDelivery.Domain;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AutoDelivery.Core.Repository
 {
@@ -25,9 +25,9 @@ namespace AutoDelivery.Core.Repository
             return dbSet.ToList();
         }
 
-        public List<TEntity> GetList(Func<TEntity,bool> predicate)
+        public List<TEntity> GetList(Func<TEntity, bool> predicate)
         {
-           var dbSet = DbSet;
+            var dbSet = DbSet;
             return dbSet.Where(predicate).ToList();
         }
 
@@ -38,11 +38,11 @@ namespace AutoDelivery.Core.Repository
             var dbSet = DbSet;
             if (pageWithSortDto.OrderType == OrderType.Asc)
             {
-                return await dbSet.OrderBy("Id",false).Skip(skip).Take(pageWithSortDto.PageSize).ToListAsync();
+                return await dbSet.OrderBy("Id", false).Skip(skip).Take(pageWithSortDto.PageSize).ToListAsync();
             }
             else
             {
-                return await dbSet.OrderBy("Id",true).Skip(skip).Take(pageWithSortDto.PageSize).ToListAsync();
+                return await dbSet.OrderBy("Id", true).Skip(skip).Take(pageWithSortDto.PageSize).ToListAsync();
             }
         }
 
@@ -58,28 +58,28 @@ namespace AutoDelivery.Core.Repository
             return await GetListAsync(new PageWithSortDto());
         }
 
-        public async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity,bool>> predicate)
+        public async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate)
         {
             var dbSet = DbSet;
             return await dbSet.Where(predicate).ToListAsync();
         }
 
 
-        public async Task<List<TEntity>>  GetListAsync(Expression<Func<TEntity,bool>> predicate,string sort,int pageIndex,int pageSize)
+        public async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate, string sort, int pageIndex, int pageSize)
         {
             int skip = (pageIndex - 1) * pageSize;
             var dbSet = DbSet;
-            return await dbSet.Where(predicate).OrderBy(m => sort).Skip(skip).Take(pageSize).ToListAsync();
+            return await dbSet.Where(predicate).OrderBy(sort).Skip(skip).Take(pageSize).ToListAsync();
         }
 
 
-        public TEntity Get(Func<TEntity,bool> predicate)
+        public TEntity Get(Func<TEntity, bool> predicate)
         {
             var dbSet = DbSet;
             return dbSet.FirstOrDefault(predicate);
         }
 
-        public async Task<TEntity> GetAsync(Expression<Func<TEntity,bool>> predicate)
+        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
         {
             var dbSet = DbSet;
             return await dbSet.FirstOrDefaultAsync(predicate);
@@ -124,7 +124,7 @@ namespace AutoDelivery.Core.Repository
 
 
         // Update
-         public TEntity Update(TEntity entity)
+        public TEntity Update(TEntity entity)
         {
             // _context.Entry<TEntity>(entity).Property("Id").IsModified = false;
             var dbSet = DbSet;

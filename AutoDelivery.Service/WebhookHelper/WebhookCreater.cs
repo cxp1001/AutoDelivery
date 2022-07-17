@@ -4,7 +4,7 @@ namespace AutoDelivery.Service.WebhookHelper
 {
     public class WebhookCreater
     {
-        public async Task<Webhook> CreateOrdersPaidWebhookAsync(string myShopifyUrl,string shopAccessToken)
+        public async Task<Webhook> CreateOrdersPaidWebhookAsync(string myShopifyUrl, string shopAccessToken)
         {
             var webhookService = new WebhookService(myShopifyUrl, shopAccessToken);
             var topic = "orders/paid";
@@ -16,7 +16,7 @@ namespace AutoDelivery.Service.WebhookHelper
                 Topic = topic
             };
 
-            var  hook = await webhookService.CreateAsync(ordersPaidWebhook);
+            var hook = await webhookService.CreateAsync(ordersPaidWebhook);
             return hook;
         }
     }
